@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>QuakeLab — Earthquake Engineering Challenge</title>
+<style>
+:root{
+--bg:#09101d;--panel:#121b2e;--panel2:#17233a;--text:#edf4ff;
+--muted:#9caeca;--accent:#67e8f9;--good:#6ee7b7;
+--warn:#fbbf24;--bad:#fb7185;--line:#293955
+}
+*{box-sizing:border-box}
+body{
+margin:0;
+background:linear-gradient(180deg,#07101e,#0d1424 45%,#090e18);
+color:var(--text);
+font:14px/1.35 system-ui,-apple-system,Segoe UI,Roboto,sans-serif
+}
+button,input,select{font:inherit}
+.app{max-width:1200px;margin:auto;padding:14px}
+.top{
+display:flex;justify-content:space-between;align-items:center;
+flex-wrap:wrap;gap:10px;margin-bottom:12px
+}
+h1{font-size:clamp(22px,4vw,34px);margin:0}
+.sub{font-size:13px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:360px 1fr;gap:12px}
+.panel{
+background:rgba(18,27,46,.95);
+border:1px solid #243451;border-radius:16px;
+box-shadow:0 14px 32px #0005;overflow:hidden
+}
+.controls{padding:14px;max-height:calc(100vh - 105px);overflow:auto}
+.stage{
+padding:10px;min-height:720px;
+display:grid;grid-template-rows:auto 1fr auto
+}
+.section{padding:10px 0;border-bottom:1px solid var(--line)}
+.section:last-child{border-bottom:0}
+.section h3{
+margin:0 0 8px;font-size:14px;letter-spacing:.04em;
+text-transform:uppercase;color:#cad8ef
+}
+.row{
+display:grid;grid-template-columns:1fr auto;gap:10px;
+align-items:center;margin:9px 0
+}
+.small{font-size:12px;color:var(--muted)}
+.range{
+display:grid;grid-template-columns:1fr 66px;gap:8px;
+align-items:center
+}
+input[type=range]{
+width:100%;accent-color:var(--accent);touch-action:pan-y
+}
+.val{text-align:right;font-variant-numeric:tabular-nums}
+.materials{
+display:grid;grid-template-columns:repeat(3,1fr);gap:7px
+}
+.mat{
+border:1px solid #344561;background:#10192b;color:#e3edff;
+padding:9px 6px;border-radius:10px;cursor:pointer
+}
+.mat.active{
+outline:2px solid var(--accent);background:#15263e
+}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.check{
+background:var(--panel2);padding:9px;border-radius:10px;
+border:1px solid #2c3b58
+}
+.check input{transform:scale(1.15);margin-right:6px}
+.storyList{
+display:grid;grid-template-columns:repeat(2,1fr);
+gap:6px;max-height:180px;overflow:auto
+}
+.story{
+display:flex;justify-content:space-between;align-items:center;
+padding:7px;background:#10192b;border:1px solid #2a3955;
+border-radius:8px
+}
+.story input{transform:scale(1.1)}
+select{
+width:100%;background:#10192b;color:white;
+border:1px solid #344561;border-radius:9px;padding:8px
+}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.btn{
+border:0;border-radius:12px;padding:13px 10px;
+font-weight:800;cursor:pointer
+}
+.run{
+background:linear-gradient(135deg,#22d3ee,#60a5fa);
+color:#04111c
+}
+.reset{background:#253550;color:white}
+.btn:disabled{opacity:.5}
+.metrics{
+display:grid;
+grid-template-columns:repeat(7,minmax(88px,1fr));
+gap:6px;
+margin-bottom:8px
+}
+.metric{
+min-width:0;
+background:#0e1728;
+border:1px solid #293955;
+border-radius:11px;
+padding:8px 8px
+}
+.metric span{
+display:block;
+font-size:10px;
+color:var(--muted);
+text-transform:uppercase;
+letter-spacing:.04em;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis
+}
+.metric b{
+display:block;
+font-size:16px;
+margin-top:2px;
+font-variant-numeric:tabular-nums;
+white-space:nowrap
+}
+#status{white-space:normal;font-size:14px;line-height:1.2}
+.metric:nth-child(6),
+.metric:nth-child(7){
+background:#132039;
+border-color:#395073
+}
+@media(max-width:1050px){
+.metrics{grid-template-columns:repeat(4,minmax(100px,1fr))}
+}
+@media(max-width:560px){
+.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+.metric span{white-space:normal}
+}
+.canvasWrap{
+position:relative;min-height:500px;
+background:radial-gradient(circle at 50% 25%,#192640,#0c1425 58%,#080e18);
+border:1px solid #263653;border-radius:13px;overflow:hidden
+}
+canvas{
+display:block;width:100%;height:100%;
+min-height:500px;touch-action:none
+}
+.legend{
+position:absolute;top:10px;left:10px;padding:7px 9px;
+border-radius:10px;background:#08101dcc;
+border:1px solid #293954;color:#bfd0e9;
+font-size:12px;pointer-events:none
+}
+.bottom{
+display:grid;grid-template-columns:1.05fr .95fr;
+gap:8px;margin-top:8px
+}
+.card{
+background:#0e1728;border:1px solid #293955;
+border-radius:11px;padding:10px
+}
+.card h3{margin:0 0 7px;font-size:13px}
+.graph{height:130px;min-height:130px;background:#091220;border-radius:8px}
+.why div{margin:4px 0;color:#d9e5f8}
+.statusGood{color:var(--good)}
+.statusBad{color:var(--bad)}
+.statusRun{color:var(--warn)}
+@media(max-width:860px){
+.grid{grid-template-columns:1fr}
+.controls{max-height:none}
+.stage{min-height:620px}
+.bottom{grid-template-columns:1fr}
+.canvasWrap,canvas{min-height:420px}
+}
+@media(max-width:480px){
+.app{padding:8px}
+.checks{grid-template-columns:1fr}
+.materials{grid-template-columns:1fr}
+.storyList{grid-template-columns:1fr 1fr}
+.canvasWrap,canvas{min-height:380px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top">
+<div>
+<h1>QuakeLab</h1>
+<div class="sub">
+Design a building. Shake it. Survive resonance without blowing the budget.
+</div>
+</div>
+<div class="sub">2D shear-building engineering challenge</div>
+</div>
+<div class="grid">
+<aside class="panel controls">
+<div class="section">
+<h3>1. Building</h3>
+<div class="row">
+<label>Floors</label>
+<div class="range">
+<input id="floors" type="range" min="2" max="10" value="6">
+<span id="floorsV" class="val">6</span>
+</div>
+</div>
+<div class="small" style="margin:7px 0">Column material</div>
+<div class="materials">
+<button class="mat" data-mat="wood">Wood</button>
+<button class="mat active" data-mat="steel">Steel</button>
+<button class="mat" data-mat="concrete">Reinf. concrete</button>
+</div>
+<div id="matInfo" class="small" style="margin-top:7px"></div>
+<div class="small" style="margin:9px 0 5px">X-bracing by story</div>
+<div id="storyList" class="storyList"></div>
+</div>
+<div class="section">
+<h3>2. Protection systems</h3>
+<div class="checks">
+<label class="check">
+<input id="isolation" type="checkbox">
+Base isolation
+</label>
+<label class="check">
+<input id="tmd" type="checkbox">
+Roof TMD
+</label>
+</div>
+<div class="small" style="margin-top:7px">
+Base isolation uses a separate moving base slab.
+The TMD is automatically tuned near the first mode.
+</div>
+</div>
+<div class="section">
+<h3>3. Earthquake</h3>
+<select id="preset">
+<option value="gentle">Gentle</option>
+<option value="strong" selected>Strong</option>
+<option value="resonance">Resonance Trap</option>
+</select>
+<div class="row">
+<label>Intensity (PGA)</label>
+<div class="range">
+<input id="pga" type="range"
+min="0.05" max="1.20" step="0.01" value="0.62">
+<span id="pgaV" class="val">0.62 g</span>
+</div>
+</div>
+<div class="row">
+<label>Shake frequency</label>
+<div class="range">
+<input id="freq" type="range"
+min="0.20" max="3.00" step="0.01" value="1.20">
+<span id="freqV" class="val">1.20 Hz</span>
+</div>
+</div>
+</div>
+<div class="section">
+<h3>4. Challenge</h3>
+<div class="row">
+<label>Budget</label>
+<b>$<span id="budget">120</span>k</b>
+</div>
+<div class="row">
+<label>Estimated cost</label>
+<b id="cost">$0k</b>
+</div>
+<div class="row">
+<label>Story drift limit</label>
+<b>2.5%</b>
+</div>
+<div class="row">
+<label>Isolation travel limit</label>
+<b>45 cm</b>
+</div>
+</div>
+<div class="btns">
+<button id="run" class="btn run">▶ Run 15s Shake</button>
+<button id="reset" class="btn reset">Reset</button>
+</div>
+</aside>
+<main class="panel stage">
+<div class="metrics">
+<div class="metric">
+<span title="Natural frequency">Nat. freq</span>
+<b id="natF">—</b>
+</div>
+<div class="metric">
+<span title="Natural period">Period</span>
+<b id="period">—</b>
+</div>
+<div class="metric">
+<span title="Quake frequency">Quake freq</span>
+<b id="quakeF">—</b>
+</div>
+<div class="metric">
+<span title="Max story drift">Story drift</span>
+<b id="storyDrift">0.00%</b>
+</div>
+<div class="metric">
+<span>Base travel</span>
+<b id="baseTravel">0.0 cm</b>
+</div>
+<div class="metric">
+<span>Status</span>
+<b id="status">Ready</b>
+</div>
+<div class="metric">
+<span>Score</span>
+<b id="score">—</b>
+</div>
+</div>
+<div class="canvasWrap">
+<canvas id="sim"></canvas>
+<div class="legend">Horizontal motion exaggerated ×18</div>
+</div>
+<div class="bottom">
+<div class="card">
+<h3>Roof drift vs time</h3>
+<canvas id="graph" class="graph"></canvas>
+</div>
+<div class="card">
+<h3>Why did that happen?</h3>
+<div id="why" class="why">
+<div>Run a shake test to get an engineering explanation.</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+<script>
+(()=>{
+"use strict";
+const $=id=>document.getElementById(id);
+const sim=$("sim");
+const ctx=sim.getContext("2d");
+const graph=$("graph");
+const gctx=graph.getContext("2d");
+const ui={
+floors:$("floors"),floorsV:$("floorsV"),storyList:$("storyList"),matInfo:$("matInfo"),
+isolation:$("isolation"),tmd:$("tmd"),preset:$("preset"),pga:$("pga"),pgaV:$("pgaV"),
+freq:$("freq"),freqV:$("freqV"),cost:$("cost"),budget:$("budget"),run:$("run"),reset:$("reset"),
+natF:$("natF"),period:$("period"),quakeF:$("quakeF"),storyDrift:$("storyDrift"),
+baseTravel:$("baseTravel"),status:$("status"),score:$("score"),why:$("why")
+};
+const materials={
+wood:{k:5.5e6,cost:8,label:"Wood"},
+steel:{k:12e6,cost:15,label:"Steel"},
+concrete:{k:9e6,cost:12,label:"Reinforced concrete"}
+};
+const floorMass=22000;
+const baseMass=22000;
+const storyHeight=3.2;
+const braceMultiplier=1.65;
+const braceCost=4;
+const isolationCost=18;
+const tmdCost=14;
+const budgetK=120;
+const storyDriftLimit=0.025;
+const isolationLimit=0.45;
+const structuralDamping=0.05;
+const isolationDamping=0.15;
+const isolationPeriod=2.5;
+let material="steel";
+let braced=[];
+let state=null;
+let running=false;
+let lastFrame=0;
+let accumulator=0;
+let history=[];
+ui.budget.textContent=budgetK;
+/* -------------------- MATRIX HELPERS -------------------- */
+function zeros(n){return Array.from({length:n},()=>Array(n).fill(0));}
+function identity(n){return Array.from({length:n},(_,i)=>Array.from({length:n},(_,j)=>i===j ? 1 : 0));}
+function addSpring(K,a,b,k){
+if(b===null){K[a][a]+=k;return;}
+K[a][a]+=k;K[b][b]+=k;K[a][b]-=k;K[b][a]-=k;
+}
+function jacobiEigenvalues(A){
+const n=A.length;
+const a=A.map(r=>r.slice());
+for(let iter=0;iter<120;iter++){
+let p=0;let q=1;let largest=0;
+for(let i=0;i<n;i++){for(let j=i+1;j<n;j++){const v=Math.abs(a[i][j]);if(v>largest){largest=v;p=i;q=j;}}}
+if(largest<1e-10) break;
+const phi=0.5*Math.atan2(2*a[p][q],a[q][q]-a[p][p]);
+const c=Math.cos(phi);const s=Math.sin(phi);
+const app=a[p][p];const aqq=a[q][q];const apq=a[p][q];
+a[p][p]=c*c*app-2*s*c*apq+s*s*aqq;
+a[q][q]=s*s*app+2*s*c*apq+c*c*aqq;
+a[p][q]=0;a[q][p]=0;
+for(let i=0;i<n;i++){
+if(i===p || i===q) continue;
+const aip=a[i][p];const aiq=a[i][q];
+a[i][p]=c*aip-s*aiq;a[p][i]=a[i][p];
+a[i][q]=s*aip+c*aiq;a[q][i]=a[i][q];
+}
+}
+return a.map((r,i)=>Math.max(r[i],1e-12)).sort((a,b)=>a-b);
+}
+function modalFrequencies(K,masses){
+/* K phi = lambda M phi -> M^-1/2 K M^-1/2 y = lambda y (M diagonal) */
+const n=K.length;const A=zeros(n);
+for(let i=0;i<n;i++){for(let j=0;j<n;j++){A[i][j]=K[i][j]/Math.sqrt(masses[i]*masses[j]);}}
+const vals=jacobiEigenvalues(A);
+return vals.map(lam=>Math.sqrt(lam));
+}
+function rayleighCoefficients(w1,w2,zeta){
+const a1=2*zeta/(w1+w2);const a0=a1*w1*w2;return {a0,a1};
+}
+function rayleighMatrix(K,masses,zeta){
+const ws=modalFrequencies(K,masses);
+const w1=ws[0];const w2=ws[Math.min(1,ws.length-1)];
+const {a0,a1}=rayleighCoefficients(w1,w2,zeta);
+const n=K.length;const C=zeros(n);
+for(let i=0;i<n;i++){for(let j=0;j<n;j++){C[i][j]=a1*K[i][j];if(i===j){C[i][i]+=a0*masses[i];}}}
+return C;
+}
+function matVec(A,x){return A.map(row=>row.reduce((sum,v,j)=>sum+v*x[j],0));}
+/* -------------------- BUILDING MODEL -------------------- */
+function storyStiffnesses(customBracing=braced){
+const n=+ui.floors.value;const ks=[];
+for(let i=0;i<n;i++){ks.push(materials[material].k*(customBracing[i]? braceMultiplier: 1));}
+return ks;
+}
+function buildFixedBaseMatrices(customBracing=braced){
+const n=+ui.floors.value;
+const ks=storyStiffnesses(customBracing);
+const K=zeros(n);
+addSpring(K,0,null,ks[0]);
+for(let i=1;i<n;i++){addSpring(K,i-1,i,ks[i]);}
+return{K,masses:Array(n).fill(floorMass),ks};
+}
+function buildPrimarySystem(customBracing=braced,forceIsolation=ui.isolation.checked){
+const fixed=buildFixedBaseMatrices(customBracing);
+const n=+ui.floors.value;
+if(!forceIsolation){
+const C=rayleighMatrix(fixed.K,fixed.masses,structuralDamping);
+return{K:fixed.K,C,masses:fixed.masses,ks:fixed.ks,baseIndex:null,firstFloorIndex:0,roofIndex:n-1};
+}
+/* ground -- isolation spring -- base slab -- story 1 -- floor 1 ... */
+const dof=n+1;
+const K=zeros(dof);const C=zeros(dof);
+const masses=[baseMass,...Array(n).fill(floorMass)];
+const supportedMass=baseMass+n*floorMass;
+const wIso=2*Math.PI/isolationPeriod;
+const kIso=supportedMass*wIso*wIso;
+addSpring(K,0,null,kIso);
+const Ks=zeros(dof);
+for(let i=0;i<n;i++){
+const lower=i;const upper=i+1;
+addSpring(K,lower,upper,fixed.ks[i]);
+addSpring(Ks,lower,upper,fixed.ks[i]);
+}
+/* Structural Rayleigh damping uses fixed-base modes */
+const fixedWs=modalFrequencies(fixed.K,fixed.masses);
+const rc=rayleighCoefficients(fixedWs[0],fixedWs[1],structuralDamping);
+for(let i=0;i<dof;i++){for(let j=0;j<dof;j++){C[i][j]=rc.a1*Ks[i][j];}}
+for(let i=1;i<dof;i++){C[i][i]+=rc.a0*masses[i];}
+const cIso=2*isolationDamping*Math.sqrt(kIso*supportedMass);
+C[0][0]+=cIso;
+return{K,C,masses,ks:fixed.ks,baseIndex:0,firstFloorIndex:1,roofIndex:n,kIso,cIso};
+}
+function primaryNaturalFrequency(customBracing=braced,forceIsolation=ui.isolation.checked){
+const sys=buildPrimarySystem(customBracing,forceIsolation);
+const ws=modalFrequencies(sys.K,sys.masses);
+return ws[0]/(2*Math.PI);
+}
+/* -------------------- COST / UI -------------------- */
+function totalCost(){
+const n=+ui.floors.value;
+let cost=n*materials[material].cost;
+cost+=braced.slice(0,n).filter(Boolean).length*braceCost;
+if(ui.isolation.checked){cost+=isolationCost;}
+if(ui.tmd.checked){cost+=tmdCost;}
+return cost;
+}
+function buildStoryUI(){
+const n=+ui.floors.value;
+while(braced.length<n){braced.push(false);}
+braced=braced.slice(0,n);
+ui.storyList.innerHTML="";
+for(let i=0;i<n;i++){
+const label=document.createElement("label");
+label.className="story";
+label.innerHTML=`<span>Story ${i+1}</span>
+<input type="checkbox"
+${braced[i]?"checked":""}>`;
+label.querySelector("input").onchange=e=>{braced[i]=e.target.checked;updateDesign(true);};
+ui.storyList.appendChild(label);
+}
+}
+function syncResonanceFrequency(){
+if(ui.preset.value!=="resonance") return;
+const f1=primaryNaturalFrequency();
+ui.freq.value=Math.max(0.20,Math.min(3,f1)).toFixed(2);
+}
+function applyPreset(){
+if(ui.preset.value==="gentle"){ui.pga.value=0.18;ui.freq.value=0.75;}
+else if(ui.preset.value==="strong"){ui.pga.value=0.62;ui.freq.value=1.20;}
+else{ui.pga.value=0.35;syncResonanceFrequency();}
+updateDesign(false);
+}
+function updateDesign(designChanged=false){
+if(designChanged && ui.preset.value==="resonance"){syncResonanceFrequency();}
+const f1=primaryNaturalFrequency();
+const cost=totalCost();
+ui.floorsV.textContent=ui.floors.value;
+ui.matInfo.textContent=`${materials[material].label}: `+`${(materials[material].k/1e6).toFixed(1)} MN/m per story, `+`$${materials[material].cost}k per floor`;
+ui.pgaV.textContent=(+ui.pga.value).toFixed(2)+" g";
+ui.freqV.textContent=(+ui.freq.value).toFixed(2)+" Hz";
+ui.cost.textContent=`$${cost}k`;
+ui.cost.style.color=cost>budgetK? "var(--bad)": "var(--good)";
+ui.natF.textContent=f1.toFixed(2)+" Hz";
+ui.period.textContent=(1/f1).toFixed(2)+" s";
+ui.quakeF.textContent=(+ui.freq.value).toFixed(2)+" Hz";
+if(!running){draw();}
+}
+/* -------------------- EARTHQUAKE -------------------- */
+function groundAcceleration(t){
+const duration=15;
+const pga=+ui.pga.value*9.81;
+const f=+ui.freq.value;
+let ramp=Math.min(1,t/1.5,(duration-t)/1.5);
+ramp=Math.max(0,ramp);
+const main=Math.sin(2*Math.PI*f*t);
+const side=0.22*Math.sin(2*Math.PI*(f*1.73)*t+1.1);
+const noise=0.10*Math.sin(2*Math.PI*6.7*t+2.4)*Math.sin(2*Math.PI*0.37*t);
+return(pga*ramp*(main+side+noise)/1.28);
+}
+/* -------------------- STATE / TMD -------------------- */
+function newState(){
+const n=+ui.floors.value;
+const sys=buildPrimarySystem();
+const ws=modalFrequencies(sys.K,sys.masses);
+const f1=ws[0]/(2*Math.PI);
+let tmd=null;
+if(ui.tmd.checked){
+const mu=0.05;
+const buildingMass=n*floorMass;
+const mt=mu*buildingMass;
+/* Den Hartog: ft = f1/(1+mu), zeta_t = sqrt(3mu/(8(1+mu)^3)) */
+const ft=f1/(1+mu);
+const wt=2*Math.PI*ft;
+const kt=mt*wt*wt;
+const zetaT=Math.sqrt(3*mu/(8*Math.pow(1+mu,3)));
+const ct=2*zetaT*Math.sqrt(kt*mt);
+tmd={m:mt,k:kt,c:ct,x:0,v:0,ft,zeta:zetaT};
+}
+return{n,sys,x:Array(sys.masses.length).fill(0),v:Array(sys.masses.length).fill(0),t:0,f1,tmd,
+maxRoofDrift:0,maxStoryDrift:0,maxBaseTravel:0,failed:false,failType:null,failStory:-1,failTime:null,cost:totalCost()};
+}
+/* -------------------- PHYSICS -------------------- */
+function structuralDrifts(){
+const s=state;const drifts=[];
+if(s.sys.baseIndex===null){
+for(let i=0;i<s.n;i++){const lower=i===0? 0: s.x[i-1];drifts.push((s.x[i]-lower)/storyHeight);}
+}
+else{
+for(let i=0;i<s.n;i++){const lower=s.x[i];const upper=s.x[i+1];drifts.push((upper-lower)/storyHeight);}
+}
+return drifts;
+}
+function step(dt){
+const s=state;
+const ag=groundAcceleration(s.t);
+const Cv=matVec(s.sys.C,s.v);
+const Kx=matVec(s.sys.K,s.x);
+const forces=Array(s.x.length).fill(0);
+for(let i=0;i<forces.length;i++){forces[i]=-Cv[i]-Kx[i]-s.sys.masses[i]*ag;}
+if(s.tmd){
+const roof=s.sys.roofIndex;
+const rel=s.x[roof]-s.tmd.x;
+const relV=s.v[roof]-s.tmd.v;
+const forceOnRoof=-s.tmd.k*rel-s.tmd.c*relV;
+forces[roof]+=forceOnRoof;
+const at=-forceOnRoof/s.tmd.m-ag;
+s.tmd.v+=at*dt;
+s.tmd.x+=s.tmd.v*dt;
+}
+/* Semi-implicit Euler, dt = 1/600 s */
+for(let i=0;i<s.x.length;i++){const a=forces[i]/s.sys.masses[i];s.v[i]+=a*dt;s.x[i]+=s.v[i]*dt;}
+s.t+=dt;
+const drifts=structuralDrifts();
+for(let i=0;i<drifts.length;i++){
+const d=Math.abs(drifts[i]);
+s.maxStoryDrift=Math.max(s.maxStoryDrift,d);
+if(d>storyDriftLimit && !s.failed){s.failed=true;s.failType="story";s.failStory=i;s.failTime=s.t;
+/* Start collapse animation immediately, before finishRun() draws */
+s.visualFailStart=performance.now();}
+}
+if(s.sys.baseIndex!==null){
+const baseTravel=Math.abs(s.x[s.sys.baseIndex]);
+s.maxBaseTravel=Math.max(s.maxBaseTravel,baseTravel);
+if(baseTravel>isolationLimit && !s.failed){s.failed=true;s.failType="isolation";s.failTime=s.t;}
+}
+const roof=s.x[s.sys.roofIndex];
+const base=s.sys.baseIndex===null? 0: s.x[s.sys.baseIndex];
+const roofDrift=Math.abs(roof-base)/(s.n*storyHeight);
+s.maxRoofDrift=Math.max(s.maxRoofDrift,roofDrift);
+if(history.length<1000 && Math.floor(s.t*60)!==Math.floor((s.t-dt)*60)){history.push([s.t,roofDrift]);}
+}
+/* -------------------- RUN / SCORE -------------------- */
+function run(){
+state=newState();
+history=[];
+running=true;
+lastFrame=performance.now();
+accumulator=0;
+ui.run.disabled=true;
+ui.status.textContent="Shaking";
+ui.status.className="statusRun";
+ui.score.textContent="—";
+ui.storyDrift.textContent="0.00%";
+ui.baseTravel.textContent="0.0 cm";
+ui.why.innerHTML="<div>Shake test in progress…</div>";
+/* Phone UX: bring the simulation into view after pressing Run */
+if(window.innerWidth<860){
+requestAnimationFrame(()=>{document.querySelector(".stage").scrollIntoView({behavior:"smooth",block:"start"});});
+}
+requestAnimationFrame(loop);
+}
+function loop(ts){
+if(!running) return;
+const frame=Math.min(0.04,(ts-lastFrame)/1000 || 0);
+lastFrame=ts;
+accumulator+=frame;
+const dt=1/600;
+let guard=0;
+while(accumulator>=dt && guard++<30 && state.t<15 && !state.failed){step(dt);accumulator-=dt;}
+ui.storyDrift.textContent=(state.maxStoryDrift*100).toFixed(2)+"%";
+ui.baseTravel.textContent=(state.maxBaseTravel*100).toFixed(1)+" cm";
+draw();
+drawGraph();
+if(state.failed){
+finishRun();
+/* Physics stops at failure; keep repainting to show the collapse */
+if(state.failType==="story"){
+const runState=state;
+const animateCollapse=()=>{
+if(state!==runState) return; /* Reset or a new run took over */
+draw();
+const start=Number.isFinite(runState.visualFailStart)? runState.visualFailStart: 0;
+if(performance.now()-start<1500){requestAnimationFrame(animateCollapse);}
+};
+requestAnimationFrame(animateCollapse);
+}
+return;
+}
+if(state.t>=15){finishRun();return;}
+requestAnimationFrame(loop);
+}
+function finishRun(){
+running=false;
+ui.run.disabled=false;
+const survived=!state.failed;
+if(survived){ui.status.textContent="Survived";ui.status.className="statusGood";}
+else{ui.status.textContent=`Collapsed @ ${state.failTime.toFixed(1)}s`;ui.status.className="statusBad";}
+const overBudget=Math.max(0,state.cost-budgetK);
+let score=survived? 1000: 100;
+if(survived){score+=Math.max(0,500-state.maxStoryDrift*100*90);}
+score-=overBudget*8;
+score=Math.max(0,Math.round(score));
+ui.score.textContent=score;
+whyPanel();
+draw();
+drawGraph();
+}
+function reset(){
+running=false;
+ui.run.disabled=false;
+state=null;
+history=[];
+ui.status.textContent="Ready";
+ui.status.className="";
+ui.score.textContent="—";
+ui.storyDrift.textContent="0.00%";
+ui.baseTravel.textContent="0.0 cm";
+ui.why.innerHTML="<div>Run a shake test to get an engineering explanation.</div>";
+draw();
+drawGraph();
+}
+/* -------------------- WHY PANEL -------------------- */
+function whyPanel(){
+const fq=+ui.freq.value;
+const f1=state.f1;
+const lines=[];
+const ratio=fq/f1;
+if(Math.abs(ratio-1)<0.15){
+lines.push(`The quake (${fq.toFixed(2)} Hz) was close to the building's first natural frequency (${f1.toFixed(2)} Hz), so resonance amplified motion.`);
+}
+else{
+lines.push(`The quake frequency (${fq.toFixed(2)} Hz) was ${fq<f1?"below":"above"} the building's first natural frequency (${f1.toFixed(2)} Hz), so direct resonance was weaker.`);
+}
+if(braced.some(Boolean)){
+const unbraced=Array(state.n).fill(false);
+const baseF=primaryNaturalFrequency(unbraced,ui.isolation.checked);
+const beforeGap=Math.abs(fq-baseF);
+const afterGap=Math.abs(fq-f1);
+if(afterGap<beforeGap*0.85){
+lines.push(`Bracing made the building stiffer, but it also moved its natural frequency from ${baseF.toFixed(2)} Hz toward the quake frequency — a useful example of how "stiffer" is not automatically "safer."`);
+}
+else{
+lines.push(`X-bracing increased stiffness and shifted the building's natural frequency from about ${baseF.toFixed(2)} Hz to ${f1.toFixed(2)} Hz.`);
+}
+}
+else{
+lines.push("Without X-bracing, the frame stayed more flexible, which generally increases drift but keeps its natural frequency lower.");
+}
+if(ui.isolation.checked){
+const nearIsolationMode=Math.abs(fq-f1)/f1<0.15;
+if(nearIsolationMode){
+lines.push(`Base isolation usually protects against faster shaking, but this quake was close to the isolated building's long-period mode. That can create very large bearing motion — one reason real isolated buildings need large seismic moats. Peak travel was ${(state.maxBaseTravel*100).toFixed(1)} cm.`);
+}
+else{
+lines.push(`Base isolation added a soft, highly damped moving base, reducing motion transmitted into the structure. Peak bearing travel was ${(state.maxBaseTravel*100).toFixed(1)} cm.`);
+}
+}
+else if(ui.tmd.checked){
+lines.push(`The tuned mass damper was set to ${state.tmd.ft.toFixed(2)} Hz so its motion opposed roof vibration near the first mode.`);
+}
+else{
+lines.push("No isolation or tuned mass damper was active, so the structural frame had to resist and dissipate nearly all of the shaking.");
+}
+if(!state.failed){
+lines.push(`The building survived: maximum interstory drift was ${(state.maxStoryDrift*100).toFixed(2)}%, below the 2.5% failure limit.`);
+}
+else if(state.failType==="isolation"){
+lines.push(`The isolator exceeded 45 cm of travel and hit its simulated moat wall at ${state.failTime.toFixed(1)} seconds.`);
+}
+else{
+lines.push(`Story ${state.failStory+1} exceeded the 2.5% interstory-drift limit at ${state.failTime.toFixed(1)} seconds.`);
+}
+ui.why.innerHTML=lines.slice(0,4).map(x=>`<div>• ${x}</div>`).join("");
+}
+/* -------------------- DRAWING -------------------- */
+function resizeCanvas(c){
+const r=c.getBoundingClientRect();
+const d=Math.min(devicePixelRatio || 1,2);
+const w=Math.round(r.width*d);
+const h=Math.round(r.height*d);
+if(c.width!==w || c.height!==h){c.width=w;c.height=h;c.getContext("2d").setTransform(d,0,0,d,0,0);}
+}
+function draw(){
+resizeCanvas(sim);
+const w=sim.clientWidth;
+const h=sim.clientHeight;
+ctx.clearRect(0,0,w,h);
+const n=state? state.n: +ui.floors.value;
+const cx=w*0.52;
+const ground=h-42;
+const top=42;
+const usable=ground-top;
+const dy=usable/(n+1);
+const buildingWidth=Math.min(w*0.45,280);
+const scaleX=18;
+let baseX=0;
+let floors=Array(n).fill(0);
+if(state){
+if(state.sys.baseIndex===null){floors=state.x.map(v=>v*scaleX);}
+else{baseX=state.x[0]*scaleX;floors=state.x.slice(1).map(v=>v*scaleX);}
+}
+/* ground */
+ctx.strokeStyle="#354561";
+ctx.lineWidth=2;
+ctx.beginPath();
+ctx.moveTo(0,ground);
+ctx.lineTo(w,ground);
+ctx.stroke();
+for(let i=0;i<18;i++){
+ctx.strokeStyle="#1c2940";
+ctx.beginPath();
+ctx.moveTo(i*w/17,ground);
+ctx.lineTo(i*w/17+18,ground+18);
+ctx.stroke();
+}
+/* isolated base slab */
+if(ui.isolation.checked){
+ctx.fillStyle="#fbbf24";
+for(let j=-2;j<=2;j++){ctx.fillRect(cx+baseX+j*34-10,ground-7,20,7);}
+ctx.fillStyle="#8ea4c5";
+ctx.fillRect(cx-buildingWidth/2+baseX,ground-15,buildingWidth,8);
+}
+/* frame */
+for(let i=0;i<n;i++){
+const y=ground-(i+1)*dy;
+const lowerX=i===0? baseX: floors[i-1];
+let upperX=floors[i];
+let extraDrop=0;
+let extraShift=0;
+if(state && state.failed && state.failType==="story" && i>=state.failStory){
+const start=Number.isFinite(state.visualFailStart)? state.visualFailStart: performance.now();
+let q=(performance.now()-start)/1200;
+if(!Number.isFinite(q)){q=0;} /* never allow NaN coordinates */
+q=Math.max(0,Math.min(1,q));
+const j=i-state.failStory+1;
+extraDrop=q*q*j*11;
+extraShift=q*q*j*17;
+}
+upperX+=extraShift;
+const failed=state && state.failed && state.failType==="story" && i>=state.failStory;
+ctx.strokeStyle=failed? "#fb7185": "#8fa7ca";
+ctx.lineWidth=5;
+ctx.beginPath();
+ctx.moveTo(cx-buildingWidth*.42+lowerX,y+dy);
+ctx.lineTo(cx-buildingWidth*.42+upperX,y+extraDrop);
+ctx.moveTo(cx+buildingWidth*.42+lowerX,y+dy);
+ctx.lineTo(cx+buildingWidth*.42+upperX,y+extraDrop);
+ctx.stroke();
+if(braced[i]){
+ctx.strokeStyle="#67e8f9";
+ctx.lineWidth=2;
+ctx.beginPath();
+ctx.moveTo(cx-buildingWidth*.4+lowerX,y+dy);
+ctx.lineTo(cx+buildingWidth*.4+upperX,y+extraDrop);
+ctx.moveTo(cx+buildingWidth*.4+lowerX,y+dy);
+ctx.lineTo(cx-buildingWidth*.4+upperX,y+extraDrop);
+ctx.stroke();
+}
+ctx.fillStyle=failed? "#7f293e": "#dbe7fa";
+ctx.fillRect(cx-buildingWidth/2+upperX,y-5+extraDrop,buildingWidth,10);
+ctx.fillStyle="#97a9c6";
+ctx.font="11px system-ui";
+ctx.fillText(`${i+1}`,cx+buildingWidth/2+upperX+7,y+4+extraDrop);
+}
+/* TMD */
+if(state && state.tmd){
+const roofY=ground-n*dy;
+const roofX=floors[n-1];
+const massX=state.tmd.x*scaleX;
+ctx.strokeStyle="#c084fc";
+ctx.lineWidth=2;
+ctx.beginPath();
+ctx.moveTo(cx+roofX,roofY-8);
+ctx.lineTo(cx+massX,roofY-33);
+ctx.stroke();
+ctx.fillStyle="#c084fc";
+ctx.fillRect(cx+massX-14,roofY-43,28,16);
+ctx.fillStyle="#dbc4ff";
+ctx.font="11px system-ui";
+ctx.fillText("TMD",cx+massX-13,roofY-48);
+}
+if(running){
+ctx.fillStyle="#fbbf24";
+ctx.font="bold 14px system-ui";
+ctx.fillText(`t = ${state.t.toFixed(1)} s`,12,h-14);
+}
+}
+function drawGraph(){
+resizeCanvas(graph);
+const w=graph.clientWidth;
+const h=graph.clientHeight;
+gctx.clearRect(0,0,w,h);
+gctx.strokeStyle="#273750";
+gctx.lineWidth=1;
+for(let i=1;i<4;i++){gctx.beginPath();gctx.moveTo(0,i*h/4);gctx.lineTo(w,i*h/4);gctx.stroke();}
+if(history.length<2){return;}
+const maxY=Math.max(0.01,...history.map(p=>p[1]));
+gctx.strokeStyle="#67e8f9";
+gctx.lineWidth=2;
+gctx.beginPath();
+history.forEach((p,i)=>{
+const x=p[0]/15*w;
+const y=h-6-(p[1]/maxY)*(h-12);
+if(i===0){gctx.moveTo(x,y);}else{gctx.lineTo(x,y);}
+});
+gctx.stroke();
+gctx.fillStyle="#9fb0cc";
+gctx.font="10px system-ui";
+gctx.fillText((maxY*100).toFixed(2)+"%",4,11);
+gctx.fillText("15 s",w-25,h-5);
+}
+/* -------------------- EVENTS -------------------- */
+document.querySelectorAll(".mat").forEach(button=>{
+button.onclick=()=>{
+material=button.dataset.mat;
+document.querySelectorAll(".mat").forEach(b=>b.classList.toggle("active",b===button));
+updateDesign(true);
+};
+});
+ui.floors.oninput=()=>{buildStoryUI();updateDesign(true);};
+ui.isolation.onchange=()=>{updateDesign(true);};
+ui.tmd.onchange=()=>{updateDesign(true);};
+ui.preset.onchange=applyPreset;
+ui.pga.oninput=()=>{updateDesign(false);};
+ui.freq.oninput=()=>{
+/* Manual frequency adjustment turns Resonance Trap into a custom test */
+if(ui.preset.value==="resonance"){ui.preset.value="strong";}
+updateDesign(false);
+};
+ui.run.onclick=()=>{run();};
+ui.reset.onclick=reset;
+window.addEventListener("resize",()=>{draw();drawGraph();});
+/* -------------------- STARTUP -------------------- */
+buildStoryUI();
+updateDesign(false);
+reset();
+})();
+</script>
+</body>
+</html>
