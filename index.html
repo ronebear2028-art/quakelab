@@ -3,330 +3,768 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>QuakeLab — Earthquake Engineering Challenge</title>
+<title>QuakeLab — Gilman Engineering Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
---bg:#09101d;--panel:#121b2e;--panel2:#17233a;--text:#edf4ff;
---muted:#9caeca;--accent:#67e8f9;--good:#6ee7b7;
---warn:#fbbf24;--bad:#fb7185;--line:#293955
+--paper:#E9EFD9;
+--grid:#BCCDA5;
+--gridMajor:#A8BD8D;
+--graphite:#2F3437;
+--graphiteSoft:#5C625F;
+--blue:#2B4C9B;
+--red:#C8352B;
+--tape:#E3CF8E;
+--wood:#C49A62;
+--rubber:#555B58;
+--greenInk:#3F5544;
 }
-*{box-sizing:border-box}
+*{box-sizing:border-box;}
+html{background:var(--paper);}
 body{
 margin:0;
-background:linear-gradient(180deg,#07101e,#0d1424 45%,#090e18);
-color:var(--text);
-font:14px/1.35 system-ui,-apple-system,Segoe UI,Roboto,sans-serif
+min-width:0;
+overflow-x:hidden;
+color:var(--graphite);
+font-family:"Atkinson Hyperlegible",Arial,sans-serif;
+font-size:16px;
+background-color:var(--paper);
+background-image:
+linear-gradient(to right,rgba(168,189,141,.65) 1px,transparent 1px),
+linear-gradient(to bottom,rgba(168,189,141,.65) 1px,transparent 1px),
+linear-gradient(to right,rgba(188,205,165,.45) 1px,transparent 1px),
+linear-gradient(to bottom,rgba(188,205,165,.45) 1px,transparent 1px);
+background-size:
+100px 100px,
+100px 100px,
+20px 20px,
+20px 20px;
 }
-button,input,select{font:inherit}
-.app{max-width:1200px;margin:auto;padding:14px}
+button,
+input,
+select{font:inherit;}
+button{color:inherit;}
+.app{
+width:min(1440px,100%);
+margin:0 auto;
+padding:20px 24px 28px;
+}
 .top{
-display:flex;justify-content:space-between;align-items:center;
-flex-wrap:wrap;gap:10px;margin-bottom:12px
+display:flex;
+align-items:flex-end;
+justify-content:space-between;
+gap:24px;
+padding:0 4px 16px;
+border-bottom:2px solid rgba(47,52,55,.72);
 }
-h1{font-size:clamp(22px,4vw,34px);margin:0}
-.sub{font-size:13px;color:var(--muted)}
-.grid{display:grid;grid-template-columns:360px 1fr;gap:12px}
-.panel{
-background:rgba(18,27,46,.95);
-border:1px solid #243451;border-radius:16px;
-box-shadow:0 14px 32px #0005;overflow:hidden
+.top h1{
+margin:0;
+font-family:"Architects Daughter","Comic Sans MS",cursive;
+font-size:clamp(38px,5vw,62px);
+font-weight:400;
+line-height:1;
+transform:rotate(-1deg);
 }
-.controls{padding:14px;max-height:calc(100vh - 105px);overflow:auto}
-.stage{
-padding:10px;min-height:720px;
-display:grid;grid-template-rows:auto 1fr auto
+.top .sub{
+margin-top:6px;
+max-width:700px;
+color:var(--graphiteSoft);
+font-size:15px;
 }
-.section{padding:10px 0;border-bottom:1px solid var(--line)}
-.section:last-child{border-bottom:0}
+.clubMark{
+flex:0 0 auto;
+font-family:"Architects Daughter","Comic Sans MS",cursive;
+font-size:18px;
+transform:rotate(1deg);
+}
+.grid{
+display:grid;
+grid-template-columns:minmax(300px,370px) minmax(0,1fr);
+gap:34px;
+align-items:start;
+padding-top:24px;
+}
+.worksheet{min-width:0;}
+.section{margin-bottom:28px;}
 .section h3{
-margin:0 0 8px;font-size:14px;letter-spacing:.04em;
-text-transform:uppercase;color:#cad8ef
+margin:0 0 12px;
+font-family:"Architects Daughter","Comic Sans MS",cursive;
+font-size:24px;
+font-weight:400;
+line-height:1.1;
 }
-.row{
-display:grid;grid-template-columns:1fr auto;gap:10px;
-align-items:center;margin:9px 0
+.formLine{
+display:grid;
+grid-template-columns:minmax(0,1fr) minmax(105px,48%);
+align-items:end;
+gap:12px;
+margin:14px 0;
 }
-.small{font-size:12px;color:var(--muted)}
-.range{
-display:grid;grid-template-columns:1fr 66px;gap:8px;
-align-items:center
+.formLine.full{grid-template-columns:1fr;}
+.formLabel{min-width:0;}
+.underlineField{
+min-height:34px;
+display:flex;
+align-items:center;
+gap:8px;
+border-bottom:2px solid rgba(47,52,55,.72);
+padding:2px 2px 4px;
+color:var(--blue);
 }
-input[type=range]{
-width:100%;accent-color:var(--accent);touch-action:pan-y
+.underlineField input[type="range"]{
+min-width:0;
+flex:1;
 }
-.val{text-align:right;font-variant-numeric:tabular-nums}
+.val,
+.resultValue,
+#cost,
+#floorsV,
+#pgaV,
+#freqV{
+color:var(--blue);
+font-weight:700;
+}
+input[type="range"]{
+width:100%;
+accent-color:var(--blue);
+cursor:pointer;
+}
+select{
+width:100%;
+border:0;
+border-bottom:2px solid rgba(47,52,55,.72);
+border-radius:0;
+background:transparent;
+color:var(--blue);
+padding:5px 2px 4px;
+outline:none;
+}
 .materials{
-display:grid;grid-template-columns:repeat(3,1fr);gap:7px
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-top:9px;
 }
 .mat{
-border:1px solid #344561;background:#10192b;color:#e3edff;
-padding:9px 6px;border-radius:10px;cursor:pointer
+position:relative;
+border:1.6px solid var(--graphite);
+border-radius:2px 5px 3px 4px;
+background:rgba(233,239,217,.35);
+padding:6px 9px;
+cursor:pointer;
+transform:rotate(-.4deg);
 }
+.mat:nth-child(2){transform:rotate(.5deg);}
+.mat:nth-child(3){transform:rotate(-.2deg);}
 .mat.active{
-outline:2px solid var(--accent);background:#15263e
+color:var(--blue);
+border-color:var(--blue);
 }
-.checks{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.check{
-background:var(--panel2);padding:9px;border-radius:10px;
-border:1px solid #2c3b58
+.mat.active::after{
+content:"";
+position:absolute;
+left:6px;
+right:5px;
+bottom:2px;
+height:2px;
+background:var(--blue);
+transform:rotate(-2deg);
 }
-.check input{transform:scale(1.15);margin-right:6px}
+.small{
+color:var(--graphiteSoft);
+font-size:13px;
+line-height:1.35;
+}
 .storyList{
-display:grid;grid-template-columns:repeat(2,1fr);
-gap:6px;max-height:180px;overflow:auto
+display:grid;
+grid-template-columns:repeat(2,minmax(0,1fr));
+gap:6px 14px;
+margin-top:8px;
 }
 .story{
-display:flex;justify-content:space-between;align-items:center;
-padding:7px;background:#10192b;border:1px solid #2a3955;
-border-radius:8px
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:8px;
+min-width:0;
+padding:3px 0;
+border-bottom:1px solid rgba(47,52,55,.22);
 }
-.story input{transform:scale(1.1)}
-select{
-width:100%;background:#10192b;color:white;
-border:1px solid #344561;border-radius:9px;padding:8px
+.story input,
+.check input{
+appearance:none;
+width:18px;
+height:18px;
+flex:0 0 18px;
+border:1.8px solid var(--graphite);
+border-radius:2px 3px 2px 4px;
+background:transparent;
+position:relative;
+cursor:pointer;
 }
-.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.story input:checked::after,
+.check input:checked::after{
+content:"✓";
+position:absolute;
+left:1px;
+top:-6px;
+font-family:"Architects Daughter","Comic Sans MS",cursive;
+font-size:24px;
+color:var(--blue);
+transform:rotate(-8deg);
+}
+.checks{
+display:grid;
+grid-template-columns:1fr;
+gap:8px;
+}
+.check{
+display:flex;
+gap:9px;
+align-items:center;
+}
+.note{
+margin:18px 2px 26px;
+background:#F4E8A9;
+padding:14px 16px 16px;
+box-shadow:2px 3px 0 rgba(47,52,55,.15);
+transform:rotate(-.7deg);
+clip-path:polygon(
+1% 2%,99% 0%,100% 96%,97% 100%,
+3% 99%,0% 94%
+);
+}
+.note summary{
+cursor:pointer;
+font-family:"Architects Daughter","Comic Sans MS",cursive;
+font-size:22px;
+list-style:none;
+}
+.note summary::-webkit-details-marker{display:none;}
+.note summary::before{content:"+ ";}
+.note[open] summary::before{content:"− ";}
+.note ol,
+.note ul{
+margin:9px 0 0 20px;
+padding:0;
+}
+.note li{margin:5px 0;}
+.challengeHeading{
+margin-top:11px;
+font-family:"Architects Daughter","Comic Sans MS",cursive;
+font-size:18px;
+}
+.btns{
+display:flex;
+gap:14px;
+align-items:center;
+margin:18px 0 8px;
+}
 .btn{
-border:0;border-radius:12px;padding:13px 10px;
-font-weight:800;cursor:pointer
+border:0;
+cursor:pointer;
 }
 .run{
-background:linear-gradient(135deg,#22d3ee,#60a5fa);
-color:#04111c
+position:relative;
+min-width:180px;
+padding:14px 22px;
+background:var(--tape);
+color:var(--graphite);
+font-family:"Architects Daughter","Comic Sans MS",cursive;
+font-size:21px;
+font-weight:400;
+box-shadow:1px 2px 0 rgba(47,52,55,.22);
+clip-path:polygon(
+3% 4%,8% 1%,13% 4%,18% 1%,23% 3%,
+28% 1%,34% 4%,40% 1%,46% 3%,52% 1%,
+58% 3%,64% 1%,70% 4%,76% 1%,82% 3%,
+88% 1%,94% 4%,98% 2%,100% 92%,96% 97%,
+90% 94%,84% 98%,77% 94%,70% 98%,64% 95%,
+57% 98%,50% 95%,43% 98%,36% 94%,29% 98%,
+22% 95%,15% 98%,8% 94%,2% 97%,0% 8%
+);
+transform:rotate(-1deg);
 }
-.reset{background:#253550;color:white}
-.btn:disabled{opacity:.5}
-.metrics{
-display:grid;
-grid-template-columns:repeat(7,minmax(88px,1fr));
-gap:6px;
-margin-bottom:8px
+.run:hover{transform:rotate(-1deg) translateY(-1px);}
+.run:disabled{
+opacity:.55;
+cursor:default;
 }
-.metric{
-min-width:0;
-background:#0e1728;
-border:1px solid #293955;
-border-radius:11px;
-padding:8px 8px
+.reset{
+background:transparent;
+border-bottom:2px solid var(--graphite);
+padding:5px 3px 2px;
+font-family:"Architects Daughter","Comic Sans MS",cursive;
+font-size:18px;
 }
-.metric span{
-display:block;
-font-size:10px;
-color:var(--muted);
-text-transform:uppercase;
-letter-spacing:.04em;
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis
+.bestLine{
+margin-top:10px;
+font-family:"Architects Daughter","Comic Sans MS",cursive;
+font-size:18px;
 }
-.metric b{
-display:block;
-font-size:16px;
-margin-top:2px;
-font-variant-numeric:tabular-nums;
-white-space:nowrap
+.bestLine span{color:var(--blue);}
+.stage{min-width:0;}
+.resultsBlock{
+width:min(720px,100%);
+margin:0 0 14px auto;
 }
-#status{white-space:normal;font-size:14px;line-height:1.2}
-.metric:nth-child(6),
-.metric:nth-child(7){
-background:#132039;
-border-color:#395073
+.resultsTitle{
+margin:0 0 5px;
+font-family:"Architects Daughter","Comic Sans MS",cursive;
+font-size:23px;
+font-weight:400;
 }
-@media(max-width:1050px){
-.metrics{grid-template-columns:repeat(4,minmax(100px,1fr))}
+.resultsTable{
+width:100%;
+border-collapse:collapse;
+background:rgba(233,239,217,.38);
 }
-@media(max-width:560px){
-.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
-.metric span{white-space:normal}
+.resultsTable th,
+.resultsTable td{
+border-top:1px solid rgba(47,52,55,.52);
+border-bottom:1px solid rgba(47,52,55,.52);
+padding:6px 8px;
+vertical-align:baseline;
 }
+.resultsTable th{
+width:22%;
+text-align:left;
+font-weight:400;
+}
+.resultsTable td{
+width:28%;
+color:var(--blue);
+font-weight:700;
+}
+.resultsTable .statusCell{color:var(--graphite);}
 .canvasWrap{
-position:relative;min-height:500px;
-background:radial-gradient(circle at 50% 25%,#192640,#0c1425 58%,#080e18);
-border:1px solid #263653;border-radius:13px;overflow:hidden
+position:relative;
+width:100%;
+min-height:620px;
+overflow:hidden;
+border:1.8px solid rgba(47,52,55,.72);
+background:
+linear-gradient(to right,rgba(168,189,141,.45) 1px,transparent 1px),
+linear-gradient(to bottom,rgba(168,189,141,.45) 1px,transparent 1px),
+linear-gradient(to right,rgba(188,205,165,.28) 1px,transparent 1px),
+linear-gradient(to bottom,rgba(188,205,165,.28) 1px,transparent 1px),
+rgba(233,239,217,.72);
+background-size:
+100px 100px,
+100px 100px,
+20px 20px,
+20px 20px;
 }
-canvas{
-display:block;width:100%;height:100%;
-min-height:500px;touch-action:none
+#sim{
+display:block;
+width:100%;
+height:620px;
+min-height:620px;
+touch-action:none;
 }
 .legend{
-position:absolute;top:10px;left:10px;padding:7px 9px;
-border-radius:10px;background:#08101dcc;
-border:1px solid #293954;color:#bfd0e9;
-font-size:12px;pointer-events:none
+position:absolute;
+left:14px;
+top:12px;
+max-width:220px;
+font-family:"Architects Daughter","Comic Sans MS",cursive;
+font-size:15px;
+color:var(--graphiteSoft);
+transform:rotate(-1deg);
+pointer-events:none;
+}
+.titleBlock{
+position:relative;
+margin:0 0 -1.8px auto;
+width:min(420px,100%);
+border:1.6px solid var(--graphite);
+border-right:0;
+border-bottom:0;
+background:rgba(233,239,217,.92);
+font-size:12px;
+z-index:3;
+}
+.titleRow{
+display:grid;
+grid-template-columns:1fr 1fr;
+border-bottom:1px solid var(--graphite);
+}
+.titleRow:last-child{border-bottom:0;}
+.titleCell{
+padding:5px 7px;
+min-width:0;
+}
+.titleCell + .titleCell{border-left:1px solid var(--graphite);}
+.titleBig{
+font-family:"Architects Daughter","Comic Sans MS",cursive;
+font-size:21px;
+}
+.designerInput{
+width:100%;
+border:0;
+border-bottom:1px solid var(--graphite);
+border-radius:0;
+background:transparent;
+color:var(--blue);
+outline:none;
+padding:1px 2px;
+}
+.stampOverlay{
+position:absolute;
+left:50%;
+top:48%;
+z-index:5;
+min-width:210px;
+padding:12px 20px 8px;
+border:5px double currentColor;
+color:var(--greenInk);
+font-family:"Architects Daughter","Comic Sans MS",cursive;
+text-align:center;
+line-height:1;
+opacity:0;
+pointer-events:none;
+transform:translate(-50%,-50%) rotate(-5deg) scale(1.7);
+mix-blend-mode:multiply;
+text-shadow:
+1px 0 currentColor,
+-1px 1px rgba(47,52,55,.18);
+}
+.stampOverlay.fail{
+color:var(--red);
+transform:translate(-50%,-50%) rotate(4deg) scale(1.7);
+}
+.stampOverlay.show{animation:stampSlam 420ms cubic-bezier(.2,.8,.2,1) forwards;}
+.stampWord{
+display:block;
+font-size:42px;
+}
+.stampTime{
+display:block;
+margin-top:5px;
+font-size:17px;
+}
+@keyframes stampSlam{
+0%{opacity:0;transform:translate(-50%,-50%) rotate(-6deg) scale(2.2);}
+68%{opacity:.92;transform:translate(-50%,-50%) rotate(-4deg) scale(.94);}
+82%{transform:translate(-50%,-50%) rotate(-5deg) scale(1.04);}
+100%{opacity:.88;transform:translate(-50%,-50%) rotate(-5deg) scale(1);}
+}
+.stampOverlay.fail.show{animation-name:stampSlamFail;}
+@keyframes stampSlamFail{
+0%{opacity:0;transform:translate(-50%,-50%) rotate(6deg) scale(2.2);}
+68%{opacity:.92;transform:translate(-50%,-50%) rotate(3deg) scale(.94);}
+82%{transform:translate(-50%,-50%) rotate(4deg) scale(1.04);}
+100%{opacity:.9;transform:translate(-50%,-50%) rotate(4deg) scale(1);}
 }
 .bottom{
-display:grid;grid-template-columns:1.05fr .95fr;
-gap:8px;margin-top:8px
+display:grid;
+grid-template-columns:minmax(0,1.05fr) minmax(260px,.95fr);
+gap:26px;
+margin-top:22px;
 }
-.card{
-background:#0e1728;border:1px solid #293955;
-border-radius:11px;padding:10px
+.bottom h3{
+margin:0 0 8px;
+font-family:"Architects Daughter","Comic Sans MS",cursive;
+font-size:22px;
+font-weight:400;
 }
-.card h3{margin:0 0 7px;font-size:13px}
-.graph{height:130px;min-height:130px;background:#091220;border-radius:8px}
-.why div{margin:4px 0;color:#d9e5f8}
-.statusGood{color:var(--good)}
-.statusBad{color:var(--bad)}
-.statusRun{color:var(--warn)}
-@media(max-width:860px){
-.grid{grid-template-columns:1fr}
-.controls{max-height:none}
-.stage{min-height:620px}
-.bottom{grid-template-columns:1fr}
-.canvasWrap,canvas{min-height:420px}
+.graphWrap{min-width:0;}
+#graph{
+display:block;
+width:100%;
+height:180px;
+min-height:180px;
+border-left:1px solid rgba(47,52,55,.55);
+border-bottom:1px solid rgba(47,52,55,.55);
+background:
+linear-gradient(to right,rgba(188,205,165,.35) 1px,transparent 1px),
+linear-gradient(to bottom,rgba(188,205,165,.35) 1px,transparent 1px);
+background-size:20px 20px;
 }
-@media(max-width:480px){
-.app{padding:8px}
-.checks{grid-template-columns:1fr}
-.materials{grid-template-columns:1fr}
-.storyList{grid-template-columns:1fr 1fr}
-.canvasWrap,canvas{min-height:380px}
+.graphNote{
+margin-top:5px;
+color:var(--graphiteSoft);
+font-size:12px;
+}
+.why{
+padding-left:9px;
+border-left:3px solid rgba(47,52,55,.5);
+transform:rotate(.15deg);
+}
+.why div{margin:7px 0;}
+.statusGood{color:var(--greenInk)!important;}
+.statusBad{color:var(--red)!important;}
+.statusRun{color:var(--blue)!important;}
+@media(max-width:980px){
+.grid{grid-template-columns:320px minmax(0,1fr);gap:22px;}
+#sim{height:560px;min-height:560px;}
+.canvasWrap{min-height:560px;}
+}
+@media(max-width:859px){
+.app{padding:14px 12px 24px;}
+.top{align-items:flex-start;flex-direction:column;gap:8px;}
+.grid{grid-template-columns:1fr;gap:28px;}
+.worksheet{width:100%;}
+.resultsBlock{margin-left:0;}
+#sim{height:520px;min-height:520px;}
+.canvasWrap{min-height:520px;}
+.bottom{grid-template-columns:1fr;gap:22px;}
+}
+@media(max-width:520px){
+body{font-size:15px;}
+.app{padding-left:9px;padding-right:9px;}
+.top h1{font-size:42px;}
+.formLine{grid-template-columns:minmax(0,1fr) minmax(105px,46%);}
+.storyList{grid-template-columns:1fr 1fr;gap:4px 10px;}
+.btns{align-items:flex-start;flex-direction:column;}
+.run{width:min(260px,100%);}
+.resultsTable{font-size:13px;}
+.resultsTable th,
+.resultsTable td{padding:5px 4px;}
+#sim{height:460px;min-height:460px;}
+.canvasWrap{min-height:460px;}
+.titleBlock{width:100%;border-left:0;}
+.titleBig{font-size:16px;}
+.stampOverlay{min-width:170px;padding:9px 13px 6px;}
+.stampWord{font-size:34px;}
+}
+@media(prefers-reduced-motion:reduce){
+*,
+*::before,
+*::after{
+scroll-behavior:auto!important;
+animation-duration:.001ms!important;
+animation-iteration-count:1!important;
+transition-duration:.001ms!important;
+}
+.stampOverlay.show,
+.stampOverlay.fail.show{
+animation:none;
+opacity:.88;
+transform:translate(-50%,-50%) rotate(-4deg) scale(1);
+}
+.stampOverlay.fail.show{transform:translate(-50%,-50%) rotate(4deg) scale(1);}
 }
 </style>
 </head>
 <body>
 <div class="app">
-<div class="top">
+<header class="top">
 <div>
 <h1>QuakeLab</h1>
 <div class="sub">
-Design a building. Shake it. Survive resonance without blowing the budget.
+Design a building, put it on the shake table, and find out if it stays standing.
 </div>
 </div>
-<div class="sub">2D shear-building engineering challenge</div>
+<div class="clubMark">
+Gilman Engineering Club
 </div>
+</header>
 <div class="grid">
-<aside class="panel controls">
-<div class="section">
-<h3>1. Building</h3>
-<div class="row">
-<label>Floors</label>
-<div class="range">
+<aside class="worksheet">
+<section class="section">
+<h3>Building design</h3>
+<div class="formLine">
+<div class="formLabel">Number of floors</div>
+<div class="underlineField">
 <input id="floors" type="range" min="2" max="10" value="6">
 <span id="floorsV" class="val">6</span>
 </div>
 </div>
-<div class="small" style="margin:7px 0">Column material</div>
+<div class="formLine full">
+<div class="formLabel">Column material</div>
 <div class="materials">
 <button class="mat" data-mat="wood">Wood</button>
 <button class="mat active" data-mat="steel">Steel</button>
-<button class="mat" data-mat="concrete">Reinf. concrete</button>
+<button class="mat" data-mat="concrete">Reinforced concrete</button>
 </div>
-<div id="matInfo" class="small" style="margin-top:7px"></div>
-<div class="small" style="margin:9px 0 5px">X-bracing by story</div>
+</div>
+<div id="matInfo" class="small"></div>
+<div class="formLine full">
+<div>
+<div class="formLabel">Add X-bracing</div>
 <div id="storyList" class="storyList"></div>
 </div>
-<div class="section">
-<h3>2. Protection systems</h3>
+</div>
+</section>
+<section class="section">
+<h3>Protection systems</h3>
 <div class="checks">
 <label class="check">
 <input id="isolation" type="checkbox">
-Base isolation
+<span>Base isolation</span>
 </label>
 <label class="check">
 <input id="tmd" type="checkbox">
-Roof TMD
+<span>Tuned mass damper</span>
 </label>
 </div>
-<div class="small" style="margin-top:7px">
-Base isolation uses a separate moving base slab.
-The TMD is automatically tuned near the first mode.
+<div class="small" style="margin-top:8px">
+Isolation lets the base move. The roof damper is tuned automatically near the first vibration mode.
 </div>
-</div>
-<div class="section">
-<h3>3. Earthquake</h3>
+</section>
+<section class="section">
+<h3>Earthquake input</h3>
+<div class="formLine full">
+<label>
+Test
 <select id="preset">
 <option value="gentle">Gentle</option>
 <option value="strong" selected>Strong</option>
 <option value="resonance">Resonance Trap</option>
 </select>
-<div class="row">
-<label>Intensity (PGA)</label>
-<div class="range">
-<input id="pga" type="range"
-min="0.05" max="1.20" step="0.01" value="0.62">
+</label>
+</div>
+<div class="formLine">
+<div class="formLabel">Peak ground acceleration</div>
+<div class="underlineField">
+<input id="pga" type="range" min="0.05" max="1.20" step="0.01" value="0.62">
 <span id="pgaV" class="val">0.62 g</span>
 </div>
 </div>
-<div class="row">
-<label>Shake frequency</label>
-<div class="range">
-<input id="freq" type="range"
-min="0.20" max="3.00" step="0.01" value="1.20">
+<div class="formLine">
+<div class="formLabel">Dominant frequency</div>
+<div class="underlineField">
+<input id="freq" type="range" min="0.20" max="3.00" step="0.01" value="1.20">
 <span id="freqV" class="val">1.20 Hz</span>
 </div>
 </div>
-</div>
-<div class="section">
-<h3>4. Challenge</h3>
-<div class="row">
-<label>Budget</label>
-<b>$<span id="budget">120</span>k</b>
-</div>
-<div class="row">
-<label>Estimated cost</label>
-<b id="cost">$0k</b>
-</div>
-<div class="row">
-<label>Story drift limit</label>
-<b>2.5%</b>
-</div>
-<div class="row">
-<label>Isolation travel limit</label>
-<b>45 cm</b>
+</section>
+<section class="section">
+<h3>Cost check</h3>
+<div class="formLine">
+<div>Budget</div>
+<div class="underlineField">
+<span>$<span id="budget">120</span>k</span>
 </div>
 </div>
+<div class="formLine">
+<div>Your design</div>
+<div id="cost" class="underlineField">
+$0k
+</div>
+</div>
+<div class="small">
+A story fails past 2.5% drift.<br>
+Isolation bearings can travel 45 cm.
+</div>
+</section>
+<details class="note">
+<summary>How to play</summary>
+<ol>
+<li>Build a design and stay near the budget.</li>
+<li>Choose an earthquake and run the shake table.</li>
+<li>Use the frequency and drift results to redesign.</li>
+</ol>
+<div class="challengeHeading">Club challenges</div>
+<ul>
+<li>Survive <b>Strong</b> under $120k.</li>
+<li>Beat the <b>Resonance Trap</b> without base isolation.</li>
+<li>Find a case where adding bracing makes the result worse.</li>
+</ul>
+</details>
 <div class="btns">
-<button id="run" class="btn run">▶ Run 15s Shake</button>
-<button id="reset" class="btn reset">Reset</button>
+<button id="run" class="btn run">
+Run shake test
+</button>
+<button id="reset" class="btn reset">
+Reset
+</button>
+</div>
+<div class="bestLine">
+Best score on this device:
+<span id="bestScore">—</span>
 </div>
 </aside>
-<main class="panel stage">
-<div class="metrics">
-<div class="metric">
-<span title="Natural frequency">Nat. freq</span>
-<b id="natF">—</b>
-</div>
-<div class="metric">
-<span title="Natural period">Period</span>
-<b id="period">—</b>
-</div>
-<div class="metric">
-<span title="Quake frequency">Quake freq</span>
-<b id="quakeF">—</b>
-</div>
-<div class="metric">
-<span title="Max story drift">Story drift</span>
-<b id="storyDrift">0.00%</b>
-</div>
-<div class="metric">
-<span>Base travel</span>
-<b id="baseTravel">0.0 cm</b>
-</div>
-<div class="metric">
-<span>Status</span>
-<b id="status">Ready</b>
-</div>
-<div class="metric">
-<span>Score</span>
-<b id="score">—</b>
-</div>
-</div>
+<main class="stage">
+<section class="resultsBlock">
+<h2 class="resultsTitle">Results</h2>
+<table class="resultsTable">
+<tbody>
+<tr>
+<th>Natural frequency</th>
+<td id="natF">—</td>
+<th>Quake frequency</th>
+<td id="quakeF">—</td>
+</tr>
+<tr>
+<th>Natural period</th>
+<td id="period">—</td>
+<th>Peak story drift</th>
+<td id="storyDrift">0.00%</td>
+</tr>
+<tr>
+<th>Base travel</th>
+<td id="baseTravel">0.0 cm</td>
+<th>Cost / budget</th>
+<td>
+<span id="costResult">See worksheet</span>
+</td>
+</tr>
+<tr>
+<th>Outcome</th>
+<td id="status" class="statusCell">Ready</td>
+<th>Score</th>
+<td id="score">—</td>
+</tr>
+</tbody>
+</table>
+</section>
 <div class="canvasWrap">
 <canvas id="sim"></canvas>
-<div class="legend">Horizontal motion exaggerated ×18</div>
+<div class="legend">
+Motion exaggerated for visibility.<br>
+Pencil sketch, not to scale.
+</div>
+<div id="stampOverlay" class="stampOverlay" aria-hidden="true">
+<span class="stampWord">PASSED</span>
+<span class="stampTime">15.0 s</span>
+</div>
+<div class="titleBlock">
+<div class="titleRow">
+<div class="titleCell titleBig">
+QuakeLab
+</div>
+<div class="titleCell">
+Gilman Engineering Club
+</div>
+</div>
+<div class="titleRow">
+<div class="titleCell">
+Sheet 1 of 1
+</div>
+<div class="titleCell">
+Structural shake test
+</div>
+</div>
+<div class="titleRow">
+<div class="titleCell">
+Designed by:
+</div>
+<div class="titleCell">
+<input id="designerName" class="designerInput" type="text" maxlength="28" aria-label="Designer name" placeholder="write your name">
+</div>
+</div>
+</div>
 </div>
 <div class="bottom">
-<div class="card">
-<h3>Roof drift vs time</h3>
-<canvas id="graph" class="graph"></canvas>
+<section class="graphWrap">
+<h3>Drift history</h3>
+<canvas id="graph"></canvas>
+<div class="graphNote">
+Roof drift over the 15-second test. The red dashed line is the 2.5% failure limit.
 </div>
-<div class="card">
+</section>
+<section>
 <h3>Why did that happen?</h3>
 <div id="why" class="why">
-<div>Run a shake test to get an engineering explanation.</div>
+<div>
+Run a shake test to get an engineering explanation.
 </div>
 </div>
+</section>
 </div>
 </main>
 </div>
@@ -513,7 +951,12 @@ ui.matInfo.textContent=`${materials[material].label}: `+`${(materials[material].
 ui.pgaV.textContent=(+ui.pga.value).toFixed(2)+" g";
 ui.freqV.textContent=(+ui.freq.value).toFixed(2)+" Hz";
 ui.cost.textContent=`$${cost}k`;
-ui.cost.style.color=cost>budgetK? "var(--bad)": "var(--good)";
+ui.cost.style.color=cost>budgetK? "var(--red)": "var(--blue)";
+const costResult=document.getElementById("costResult");
+if(costResult){
+costResult.textContent=`$${cost}k / $${budgetK}k`;
+costResult.style.color=cost>budgetK? "var(--red)": "var(--blue)";
+}
 ui.natF.textContent=f1.toFixed(2)+" Hz";
 ui.period.textContent=(1/f1).toFixed(2)+" s";
 ui.quakeF.textContent=(+ui.freq.value).toFixed(2)+" Hz";
@@ -607,6 +1050,7 @@ if(history.length<1000 && Math.floor(s.t*60)!==Math.floor((s.t-dt)*60)){history.
 function run(){
 state=newState();
 history=[];
+clearStamp();
 running=true;
 lastFrame=performance.now();
 accumulator=0;
@@ -617,9 +1061,14 @@ ui.score.textContent="—";
 ui.storyDrift.textContent="0.00%";
 ui.baseTravel.textContent="0.0 cm";
 ui.why.innerHTML="<div>Shake test in progress…</div>";
-/* Phone UX: bring the simulation into view after pressing Run */
+/* Phone: after tapping Run, bring the drawing into view. */
 if(window.innerWidth<860){
-requestAnimationFrame(()=>{document.querySelector(".stage").scrollIntoView({behavior:"smooth",block:"start"});});
+requestAnimationFrame(()=>{
+document.querySelector(".stage").scrollIntoView({
+behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches? "auto": "smooth",
+block:"start"
+});
+});
 }
 requestAnimationFrame(loop);
 }
@@ -665,7 +1114,9 @@ if(survived){score+=Math.max(0,500-state.maxStoryDrift*100*90);}
 score-=overBudget*8;
 score=Math.max(0,Math.round(score));
 ui.score.textContent=score;
+updateBestScore(score);
 whyPanel();
+showStamp(survived,survived? 15: state.failTime);
 draw();
 drawGraph();
 }
@@ -674,6 +1125,8 @@ running=false;
 ui.run.disabled=false;
 state=null;
 history=[];
+clearStamp();
+loadBestScore();
 ui.status.textContent="Ready";
 ui.status.className="";
 ui.score.textContent="—";
@@ -744,109 +1197,257 @@ const w=Math.round(r.width*d);
 const h=Math.round(r.height*d);
 if(c.width!==w || c.height!==h){c.width=w;c.height=h;c.getContext("2d").setTransform(d,0,0,d,0,0);}
 }
+function hashSeed(value){
+let h=2166136261;
+const s=String(value);
+for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}
+return h>>>0;
+}
+function seededUnit(seed,index){
+let x=(seed+Math.imul(index+1,0x6D2B79F5))>>>0;
+x^=x>>>15;
+x=Math.imul(x,x|1);
+x^=x+Math.imul(x^x>>>7,x|61);
+x^=x>>>14;
+return((x>>>0)/4294967295);
+}
+function sketchLine(c,x1,y1,x2,y2,seed,color="#2F3437",width=1.4,passes=2){
+const h=hashSeed(seed);
+c.save();
+c.strokeStyle=color;
+c.lineCap="round";
+c.lineJoin="round";
+for(let p=0;p<passes;p++){
+const j1=(seededUnit(h,p*4)-.5)*1.25;
+const j2=(seededUnit(h,p*4+1)-.5)*1.25;
+const j3=(seededUnit(h,p*4+2)-.5)*1.25;
+const j4=(seededUnit(h,p*4+3)-.5)*1.25;
+c.globalAlpha=p===0? .78: .34;
+c.lineWidth=width*(p===0? 1: .72);
+c.beginPath();
+c.moveTo(x1+j1,y1+j2);
+c.lineTo(x2+j3,y2+j4);
+c.stroke();
+}
+c.restore();
+}
+function sketchPolyline(c,points,seed,color="#2F3437",width=1.4){
+for(let i=1;i<points.length;i++){
+sketchLine(c,points[i-1][0],points[i-1][1],points[i][0],points[i][1],`${seed}-${i}`,color,width,2);
+}
+}
+function drawPencilSlab(c,x,y,width,angle,seed,failed=false){
+c.save();
+c.translate(x,y);
+c.rotate(angle);
+const edge=failed? "#C8352B": "#2F3437";
+sketchLine(c,-width/2,-4,width/2,-4,`${seed}-top`,edge,2.2);
+sketchLine(c,-width/2,4,width/2,4,`${seed}-bottom`,edge,1.7);
+sketchLine(c,-width/2,-4,-width/2,4,`${seed}-left`,edge,1.3);
+sketchLine(c,width/2,-4,width/2,4,`${seed}-right`,edge,1.3);
+c.strokeStyle=failed? "rgba(200,53,43,.34)": "rgba(47,52,55,.23)";
+c.lineWidth=1;
+for(let hx=-width/2+9;hx<width/2-4;hx+=12){
+c.beginPath();
+c.moveTo(hx,3);
+c.lineTo(hx+8,-3);
+c.stroke();
+}
+c.restore();
+}
+function displayGroundDisplacement(t){
+if(!state || !Number.isFinite(t)){return 0;}
+const f=Math.max(.20,+ui.freq.value);
+const omega=2*Math.PI*f;
+/* Display-only displacement estimate. For a sinusoid a = -omega^2 x. Never fed back into the physics. */
+let x=-groundAcceleration(t)/(omega*omega);
+/* Keep an extreme custom input from moving the drawing off the sheet. */
+x=Math.max(-.32,Math.min(.32,x));
+return x;
+}
+function clearStamp(){
+const stamp=document.getElementById("stampOverlay");
+if(!stamp) return;
+stamp.classList.remove("show","fail");
+stamp.setAttribute("aria-hidden","true");
+}
+function showStamp(survived,time){
+const stamp=document.getElementById("stampOverlay");
+if(!stamp) return;
+const word=stamp.querySelector(".stampWord");
+const timeEl=stamp.querySelector(".stampTime");
+word.textContent=survived? "PASSED": "COLLAPSED";
+timeEl.textContent=survived? "15.0 s": `${time.toFixed(1)} s`;
+stamp.classList.remove("show","fail");
+if(!survived){stamp.classList.add("fail");}
+/* Force a reflow so repeated runs replay the stamp. */
+void stamp.offsetWidth;
+stamp.classList.add("show");
+stamp.setAttribute("aria-hidden","false");
+}
+function loadBestScore(){
+const el=document.getElementById("bestScore");
+if(!el) return;
+try{
+const saved=localStorage.getItem("quakeLabBestScore");
+el.textContent=saved===null? "—": saved;
+}
+catch(err){el.textContent="—";}
+}
+function updateBestScore(score){
+const el=document.getElementById("bestScore");
+if(!el) return;
+try{
+const oldRaw=localStorage.getItem("quakeLabBestScore");
+const old=oldRaw===null? -Infinity: Number(oldRaw);
+if(!Number.isFinite(old) || score>old){
+localStorage.setItem("quakeLabBestScore",String(score));
+el.textContent=String(score);
+}
+else{el.textContent=String(old);}
+}
+catch(err){
+/* Private browsing / locked-down storage should never break the sim. */
+el.textContent=String(score);
+}
+}
 function draw(){
 resizeCanvas(sim);
 const w=sim.clientWidth;
 const h=sim.clientHeight;
 ctx.clearRect(0,0,w,h);
 const n=state? state.n: +ui.floors.value;
-const cx=w*0.52;
-const ground=h-42;
-const top=42;
-const usable=ground-top;
+const tableY=h-82;
+const topY=55;
+const usable=tableY-topY;
 const dy=usable/(n+1);
-const buildingWidth=Math.min(w*0.45,280);
-const scaleX=18;
-let baseX=0;
-let floors=Array(n).fill(0);
+const buildingWidth=Math.min(w*.43,285);
+const motionScale=140;
+const groundMotion=state? displayGroundDisplacement(state.t): 0;
+const groundX=groundMotion*motionScale;
+const center=w*.47;
+let baseRelative=0;
+let floorRelative=Array(n).fill(0);
 if(state){
-if(state.sys.baseIndex===null){floors=state.x.map(v=>v*scaleX);}
-else{baseX=state.x[0]*scaleX;floors=state.x.slice(1).map(v=>v*scaleX);}
+if(state.sys.baseIndex===null){floorRelative=state.x.map(x=>x*motionScale);}
+else{baseRelative=state.x[0]*motionScale;floorRelative=state.x.slice(1).map(x=>x*motionScale);}
 }
-/* ground */
-ctx.strokeStyle="#354561";
-ctx.lineWidth=2;
-ctx.beginPath();
-ctx.moveTo(0,ground);
-ctx.lineTo(w,ground);
-ctx.stroke();
-for(let i=0;i<18;i++){
-ctx.strokeStyle="#1c2940";
-ctx.beginPath();
-ctx.moveTo(i*w/17,ground);
-ctx.lineTo(i*w/17+18,ground+18);
-ctx.stroke();
+const baseX=groundX+baseRelative;
+const floors=floorRelative.map(x=>groundX+x);
+/* Moving ground strokes. */
+for(let i=0;i<20;i++){
+const gx=-30+i*((w+60)/19)+groundX;
+sketchLine(ctx,gx,tableY+28,gx+17,tableY+39,`ground-${i}`,"rgba(47,52,55,.42)",1.1,1);
 }
-/* isolated base slab */
+/* Plywood shake table. */
+const tableLeft=center-buildingWidth*.78+groundX;
+const tableRight=center+buildingWidth*.78+groundX;
+ctx.save();
+ctx.fillStyle="rgba(196,154,98,.48)";
+ctx.beginPath();
+ctx.moveTo(tableLeft,tableY+3);
+ctx.lineTo(tableRight,tableY+3);
+ctx.lineTo(tableRight-4,tableY+22);
+ctx.lineTo(tableLeft+3,tableY+22);
+ctx.closePath();
+ctx.fill();
+ctx.restore();
+sketchLine(ctx,tableLeft,tableY+3,tableRight,tableY+3,"table-top","#2F3437",2.2);
+sketchLine(ctx,tableLeft+3,tableY+22,tableRight-4,tableY+22,"table-bottom","#2F3437",1.7);
+for(let i=0;i<7;i++){
+const x=tableLeft+12+i*((tableRight-tableLeft-24)/6);
+sketchLine(ctx,x,tableY+6,x+12,tableY+19,`woodgrain-${i}`,"rgba(91,68,42,.38)",1,1);
+}
+ctx.save();
+ctx.fillStyle="#5C625F";
+ctx.font='14px "Architects Daughter","Comic Sans MS",cursive';
+ctx.fillText("plywood shake table",tableLeft+8,tableY+51);
+ctx.restore();
+/* Isolation pads. */
 if(ui.isolation.checked){
-ctx.fillStyle="#fbbf24";
-for(let j=-2;j<=2;j++){ctx.fillRect(cx+baseX+j*34-10,ground-7,20,7);}
-ctx.fillStyle="#8ea4c5";
-ctx.fillRect(cx-buildingWidth/2+baseX,ground-15,buildingWidth,8);
+for(let j=-2;j<=2;j++){
+const x=center+baseX+j*31;
+ctx.save();
+ctx.fillStyle="rgba(85,91,88,.74)";
+ctx.fillRect(x-9,tableY-3,18,9);
+ctx.restore();
+sketchLine(ctx,x-9,tableY,x+9,tableY,`bearing-${j}`,"#2F3437",1);
 }
-/* frame */
+sketchLine(ctx,center-buildingWidth/2+baseX,tableY-9,center+buildingWidth/2+baseX,tableY-9,"base-slab","#2F3437",3);
+}
+/* Building stories. */
 for(let i=0;i<n;i++){
-const y=ground-(i+1)*dy;
+const floorY=tableY-(i+1)*dy;
+const lowerY=i===0? tableY-9: tableY-i*dy;
 const lowerX=i===0? baseX: floors[i-1];
 let upperX=floors[i];
-let extraDrop=0;
-let extraShift=0;
-if(state && state.failed && state.failType==="story" && i>=state.failStory){
-const start=Number.isFinite(state.visualFailStart)? state.visualFailStart: performance.now();
-let q=(performance.now()-start)/1200;
-if(!Number.isFinite(q)){q=0;} /* never allow NaN coordinates */
-q=Math.max(0,Math.min(1,q));
-const j=i-state.failStory+1;
-extraDrop=q*q*j*11;
-extraShift=q*q*j*17;
-}
-upperX+=extraShift;
+let drop=0;
+let tilt=0;
 const failed=state && state.failed && state.failType==="story" && i>=state.failStory;
-ctx.strokeStyle=failed? "#fb7185": "#8fa7ca";
-ctx.lineWidth=5;
-ctx.beginPath();
-ctx.moveTo(cx-buildingWidth*.42+lowerX,y+dy);
-ctx.lineTo(cx-buildingWidth*.42+upperX,y+extraDrop);
-ctx.moveTo(cx+buildingWidth*.42+lowerX,y+dy);
-ctx.lineTo(cx+buildingWidth*.42+upperX,y+extraDrop);
-ctx.stroke();
+if(failed){
+const start=Number.isFinite(state.visualFailStart)? state.visualFailStart: performance.now();
+let q=(performance.now()-start)/1250;
+if(!Number.isFinite(q)){q=0;}
+q=Math.max(0,Math.min(1,q));
+const level=i-state.failStory+1;
+drop=q*q*level*15;
+tilt=q*(.045+level*.025);
+upperX+=q*q*level*18;
+}
+const leftBottomX=center-buildingWidth*.42+lowerX;
+const rightBottomX=center+buildingWidth*.42+lowerX;
+const leftTopX=center-buildingWidth*.42+upperX;
+const rightTopX=center+buildingWidth*.42+upperX;
+const topY=floorY+drop;
+sketchLine(ctx,leftBottomX,lowerY,leftTopX,topY,`column-left-${i}`,failed? "#C8352B": "#2F3437",2);
+sketchLine(ctx,rightBottomX,lowerY,rightTopX,topY,`column-right-${i}`,failed? "#C8352B": "#2F3437",2);
 if(braced[i]){
-ctx.strokeStyle="#67e8f9";
-ctx.lineWidth=2;
-ctx.beginPath();
-ctx.moveTo(cx-buildingWidth*.4+lowerX,y+dy);
-ctx.lineTo(cx+buildingWidth*.4+upperX,y+extraDrop);
-ctx.moveTo(cx+buildingWidth*.4+lowerX,y+dy);
-ctx.lineTo(cx-buildingWidth*.4+upperX,y+extraDrop);
-ctx.stroke();
+sketchLine(ctx,leftBottomX,lowerY,rightTopX,topY,`brace-a-${i}`,"#2B4C9B",2);
+sketchLine(ctx,rightBottomX,lowerY,leftTopX,topY,`brace-b-${i}`,"#2B4C9B",2);
 }
-ctx.fillStyle=failed? "#7f293e": "#dbe7fa";
-ctx.fillRect(cx-buildingWidth/2+upperX,y-5+extraDrop,buildingWidth,10);
-ctx.fillStyle="#97a9c6";
-ctx.font="11px system-ui";
-ctx.fillText(`${i+1}`,cx+buildingWidth/2+upperX+7,y+4+extraDrop);
+drawPencilSlab(ctx,center+upperX,topY,buildingWidth,tilt,`slab-${i}`,failed);
+ctx.save();
+ctx.fillStyle=failed? "#C8352B": "#5C625F";
+ctx.font='12px "Architects Daughter","Comic Sans MS",cursive';
+ctx.fillText(`${i+1}`,center+buildingWidth/2+upperX+8,topY+4);
+ctx.restore();
 }
-/* TMD */
+/* Hanging roof TMD. */
 if(state && state.tmd){
-const roofY=ground-n*dy;
-const roofX=floors[n-1];
-const massX=state.tmd.x*scaleX;
-ctx.strokeStyle="#c084fc";
-ctx.lineWidth=2;
-ctx.beginPath();
-ctx.moveTo(cx+roofX,roofY-8);
-ctx.lineTo(cx+massX,roofY-33);
-ctx.stroke();
-ctx.fillStyle="#c084fc";
-ctx.fillRect(cx+massX-14,roofY-43,28,16);
-ctx.fillStyle="#dbc4ff";
-ctx.font="11px system-ui";
-ctx.fillText("TMD",cx+massX-13,roofY-48);
+const roofY=tableY-n*dy;
+const roofX=center+floors[n-1];
+const weightX=center+groundX+state.tmd.x*motionScale;
+sketchLine(ctx,roofX,roofY-5,weightX,roofY-43,"tmd-hanger","#2F3437",1.7);
+ctx.save();
+ctx.fillStyle="rgba(47,52,55,.28)";
+ctx.fillRect(weightX-15,roofY-55,30,18);
+ctx.restore();
+drawPencilSlab(ctx,weightX,roofY-46,30,0,"tmd-weight",false);
+ctx.save();
+ctx.fillStyle="#2B4C9B";
+ctx.font='12px "Architects Daughter","Comic Sans MS",cursive';
+ctx.fillText("TMD",weightX-13,roofY-63);
+ctx.restore();
+}
+/* Ground motion arrow. */
+if(state){
+const arrowY=tableY+66;
+const arrowX=center+groundX;
+sketchLine(ctx,arrowX-36,arrowY,arrowX+36,arrowY,"motion-arrow","#2B4C9B",1.7);
+sketchLine(ctx,arrowX+36,arrowY,arrowX+27,arrowY-5,"motion-arrow-a","#2B4C9B",1.7);
+sketchLine(ctx,arrowX+36,arrowY,arrowX+27,arrowY+5,"motion-arrow-b","#2B4C9B",1.7);
+ctx.save();
+ctx.fillStyle="#2B4C9B";
+ctx.font='13px "Architects Daughter","Comic Sans MS",cursive';
+ctx.fillText("ground motion",arrowX-38,arrowY-8);
+ctx.restore();
 }
 if(running){
-ctx.fillStyle="#fbbf24";
-ctx.font="bold 14px system-ui";
-ctx.fillText(`t = ${state.t.toFixed(1)} s`,12,h-14);
+ctx.save();
+ctx.fillStyle="#2B4C9B";
+ctx.font='18px "Architects Daughter","Comic Sans MS",cursive';
+ctx.fillText(`t = ${state.t.toFixed(1)} s`,16,h-18);
+ctx.restore();
 }
 }
 function drawGraph(){
@@ -854,24 +1455,36 @@ resizeCanvas(graph);
 const w=graph.clientWidth;
 const h=graph.clientHeight;
 gctx.clearRect(0,0,w,h);
-gctx.strokeStyle="#273750";
-gctx.lineWidth=1;
-for(let i=1;i<4;i++){gctx.beginPath();gctx.moveTo(0,i*h/4);gctx.lineTo(w,i*h/4);gctx.stroke();}
-if(history.length<2){return;}
-const maxY=Math.max(0.01,...history.map(p=>p[1]));
-gctx.strokeStyle="#67e8f9";
-gctx.lineWidth=2;
+/* Keep enough vertical scale to always show the 2.5% reference line. */
+const historyMax=history.length? Math.max(...history.map(p=>p[1])): 0;
+const maxY=Math.max(.03,historyMax*1.12);
+/* Failure reference. */
+const limitY=h-10-(storyDriftLimit/maxY)*(h-20);
+gctx.save();
+gctx.strokeStyle="#C8352B";
+gctx.lineWidth=1.5;
+gctx.setLineDash([7,5]);
 gctx.beginPath();
-history.forEach((p,i)=>{
-const x=p[0]/15*w;
-const y=h-6-(p[1]/maxY)*(h-12);
-if(i===0){gctx.moveTo(x,y);}else{gctx.lineTo(x,y);}
-});
+gctx.moveTo(0,limitY);
+gctx.lineTo(w,limitY);
 gctx.stroke();
-gctx.fillStyle="#9fb0cc";
-gctx.font="10px system-ui";
-gctx.fillText((maxY*100).toFixed(2)+"%",4,11);
-gctx.fillText("15 s",w-25,h-5);
+gctx.restore();
+gctx.save();
+gctx.fillStyle="#C8352B";
+gctx.font='12px "Architects Daughter","Comic Sans MS",cursive';
+gctx.fillText("2.5% limit",7,Math.max(13,limitY-5));
+gctx.restore();
+if(history.length<2){return;}
+const points=history.map(p=>[p[0]/15*w,h-10-(p[1]/maxY)*(h-20)]);
+sketchPolyline(gctx,points,"drift-trace","#2F3437",1.7);
+/* Sparse blue student annotations. */
+gctx.save();
+gctx.fillStyle="#2B4C9B";
+gctx.font='12px "Architects Daughter","Comic Sans MS",cursive';
+const maxLabel=`${(historyMax*100).toFixed(2)}% max roof drift`;
+gctx.fillText(maxLabel,w-gctx.measureText(maxLabel).width-8,14);
+gctx.fillText("15 s",w-28,h-14);
+gctx.restore();
 }
 /* -------------------- EVENTS -------------------- */
 document.querySelectorAll(".mat").forEach(button=>{
