@@ -530,6 +530,56 @@ body{font-size:15px;}
 .stampOverlay{min-width:170px;padding:9px 13px 6px;}
 .stampWord{font-size:34px;}
 }
+.introBtn{
+margin-top:10px;
+padding:2px 2px 3px;
+border:0;
+border-bottom:2px solid var(--blue);
+background:transparent;
+color:var(--blue);
+font-family:"Architects Daughter","Comic Sans MS",cursive;
+font-size:19px;
+cursor:pointer;
+}
+.introBtn:disabled{opacity:.5;cursor:default;}
+.introFocus{
+outline:2.5px solid var(--blue);
+outline-offset:6px;
+border-radius:4px;
+}
+.introCaption{
+position:fixed;
+left:50%;
+bottom:18px;
+z-index:50;
+width:min(760px,calc(100% - 24px));
+display:flex;
+gap:16px;
+align-items:center;
+padding:14px 18px;
+background:#F4E8A9;
+box-shadow:2px 3px 0 rgba(47,52,55,.22);
+transform:translateX(-50%) rotate(-.6deg);
+font-family:"Architects Daughter","Comic Sans MS",cursive;
+font-size:22px;
+line-height:1.25;
+color:var(--graphite);
+}
+.introCaption[hidden]{display:none;}
+#introText{flex:1;}
+.introSkip{
+flex:0 0 auto;
+padding:2px;
+border:0;
+border-bottom:2px solid var(--graphite);
+background:transparent;
+font-family:inherit;
+font-size:17px;
+cursor:pointer;
+}
+@media(max-width:520px){
+.introCaption{bottom:10px;padding:11px 13px;font-size:18px;}
+}
 @media(prefers-reduced-motion:reduce){
 *,
 *::before,
@@ -557,6 +607,7 @@ transform:translate(-50%,-50%) rotate(-4deg) scale(1);
 <div class="sub">
 Design a building, put it on the shake table, and find out if it stays standing.
 </div>
+<button id="introBtn" class="introBtn" type="button">▶ Watch the 1-minute intro</button>
 </div>
 <div class="clubMark">
 Gilman Engineering Club
@@ -769,6 +820,10 @@ Run a shake test to get an engineering explanation.
 </main>
 </div>
 </div>
+<div id="introCaption" class="introCaption" hidden>
+<span id="introText"></span>
+<button id="introSkip" class="introSkip" type="button">Skip</button>
+</div>
 <script>
 (()=>{
 "use strict";
@@ -809,6 +864,7 @@ let running=false;
 let lastFrame=0;
 let accumulator=0;
 let history=[];
+let timeScale=1; /* playback speed only; the physics step size never changes */
 ui.budget.textContent=budgetK;
 /* -------------------- MATRIX HELPERS -------------------- */
 function zeros(n){return Array.from({length:n},()=>Array(n).fill(0));}
@@ -1076,10 +1132,10 @@ function loop(ts){
 if(!running) return;
 const frame=Math.min(0.04,(ts-lastFrame)/1000 || 0);
 lastFrame=ts;
-accumulator+=frame;
+accumulator+=frame*timeScale;
 const dt=1/600;
 let guard=0;
-while(accumulator>=dt && guard++<30 && state.t<15 && !state.failed){step(dt);accumulator-=dt;}
+while(accumulator>=dt && guard++<60 && state.t<15 && !state.failed){step(dt);accumulator-=dt;}
 ui.storyDrift.textContent=(state.maxStoryDrift*100).toFixed(2)+"%";
 ui.baseTravel.textContent=(state.maxBaseTravel*100).toFixed(1)+" cm";
 draw();
@@ -1504,8 +1560,111 @@ ui.freq.oninput=()=>{
 if(ui.preset.value==="resonance"){ui.preset.value="strong";}
 updateDesign(false);
 };
-ui.run.onclick=()=>{run();};
-ui.reset.onclick=reset;
+/* -------------------- GUIDED INTRO -------------------- */
+const intro={btn:$("introBtn"),bar:$("introCaption"),text:$("introText"),skip:$("introSkip")};
+let introToken=0;
+let introActive=false;
+const reduceMotion=()=>window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function introSleep(ms,tok){
+return new Promise((res,rej)=>setTimeout(()=>tok===introToken? res(): rej("stopped"),ms));
+}
+function introWaitForRun(tok){
+return new Promise((res,rej)=>{
+const check=()=>{
+if(tok!==introToken) return rej("stopped");
+if(!running) return res();
+setTimeout(check,100);
+};
+check();
+});
+}
+function introFocus(el){
+document.querySelectorAll(".introFocus").forEach(e=>e.classList.remove("introFocus"));
+if(!el) return;
+el.classList.add("introFocus");
+el.scrollIntoView({behavior:reduceMotion()? "auto": "smooth",block:"center"});
+}
+function introSay(t){intro.text.textContent=t;}
+function setDefaultDesign(){
+material="steel";
+document.querySelectorAll(".mat").forEach(b=>b.classList.toggle("active",b.dataset.mat==="steel"));
+ui.floors.value=6;
+braced=[];
+buildStoryUI();
+ui.isolation.checked=false;
+ui.tmd.checked=false;
+ui.preset.value="strong";
+applyPreset();
+reset();
+}
+function stopIntro(){
+introToken++;
+introActive=false;
+timeScale=1;
+introFocus(null);
+intro.bar.hidden=true;
+intro.btn.disabled=false;
+}
+async function playIntro(){
+const tok=++introToken;
+introActive=true;
+intro.btn.disabled=true;
+intro.bar.hidden=false;
+setDefaultDesign();
+const drawing=sim.parentElement;
+try{
+introSay("This is QuakeLab. You design a building, then put it on a shake table.");
+introFocus(drawing);
+await introSleep(4500,tok);
+introSay("On the worksheet, pick the number of floors, the column material, and which stories get X-bracing.");
+introFocus(document.querySelector(".worksheet .section"));
+await introSleep(5500,tok);
+introSay(`Every building sways at its own natural frequency. This one sways at ${ui.natF.textContent}.`);
+introFocus(ui.natF.closest("tr"));
+await introSleep(5000,tok);
+introSay("The Resonance Trap shakes at exactly that frequency. Watch what happens.");
+ui.preset.value="resonance";
+applyPreset();
+introFocus(drawing);
+await introSleep(3000,tok);
+run();
+await introWaitForRun(tok);
+await introSleep(2500,tok);
+introSay("Collapsed. Shaking in rhythm with the building made every sway bigger than the last.");
+await introSleep(4500,tok);
+introSay("The fix: a tuned mass damper, a heavy weight on the roof that swings against the sway.");
+ui.tmd.checked=true;
+updateDesign(true);
+introFocus(ui.tmd.closest(".check"));
+await introSleep(5000,tok);
+introSay("Same earthquake again, sped up 2×.");
+introFocus(drawing);
+await introSleep(1200,tok);
+timeScale=2;
+run();
+await introWaitForRun(tok);
+timeScale=1;
+await introSleep(1500,tok);
+introSay("Passed! Your score rewards low drift and staying under the $120k budget.");
+introFocus(ui.score.closest("tr"));
+await introSleep(5000,tok);
+introSay("Your turn. Try the club challenges and beat the best score.");
+const note=document.querySelector(".note");
+note.open=true;
+introFocus(note);
+await introSleep(5000,tok);
+stopIntro();
+setDefaultDesign();
+note.open=true;
+}
+catch(err){
+/* Skipped or interrupted: stopIntro() already ran. */
+}
+}
+intro.btn.onclick=playIntro;
+intro.skip.onclick=()=>{stopIntro();setDefaultDesign();};
+ui.run.onclick=()=>{if(introActive){stopIntro();}run();};
+ui.reset.onclick=()=>{if(introActive){stopIntro();}reset();};
 window.addEventListener("resize",()=>{draw();drawGraph();});
 /* -------------------- STARTUP -------------------- */
 buildStoryUI();
