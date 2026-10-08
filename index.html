@@ -3,826 +3,63 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>QuakeLab — Gilman Engineering Club</title>
+<title>QuakeLab — Tower Challenge</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{
---paper:#E9EFD9;
---grid:#BCCDA5;
---gridMajor:#A8BD8D;
---graphite:#2F3437;
---graphiteSoft:#5C625F;
---blue:#2B4C9B;
---red:#C8352B;
---tape:#E3CF8E;
---wood:#C49A62;
---rubber:#555B58;
---greenInk:#3F5544;
-}
-*{box-sizing:border-box;}
-html{background:var(--paper);}
-body{
-margin:0;
-min-width:0;
-overflow-x:hidden;
-color:var(--graphite);
-font-family:"Atkinson Hyperlegible",Arial,sans-serif;
-font-size:16px;
-background-color:var(--paper);
-background-image:
-linear-gradient(to right,rgba(168,189,141,.65) 1px,transparent 1px),
-linear-gradient(to bottom,rgba(168,189,141,.65) 1px,transparent 1px),
-linear-gradient(to right,rgba(188,205,165,.45) 1px,transparent 1px),
-linear-gradient(to bottom,rgba(188,205,165,.45) 1px,transparent 1px);
-background-size:
-100px 100px,
-100px 100px,
-20px 20px,
-20px 20px;
-}
-button,
-input,
-select{font:inherit;}
-button{color:inherit;}
-.app{
-width:min(1440px,100%);
-margin:0 auto;
-padding:20px 24px 28px;
-}
-.top{
-display:flex;
-align-items:flex-end;
-justify-content:space-between;
-gap:24px;
-padding:0 4px 16px;
-border-bottom:2px solid rgba(47,52,55,.72);
-}
-.top h1{
-margin:0;
-font-family:"Architects Daughter","Comic Sans MS",cursive;
-font-size:clamp(38px,5vw,62px);
-font-weight:400;
-line-height:1;
-transform:rotate(-1deg);
-}
-.top .sub{
-margin-top:6px;
-max-width:700px;
-color:var(--graphiteSoft);
-font-size:15px;
-}
-.clubMark{
-flex:0 0 auto;
-font-family:"Architects Daughter","Comic Sans MS",cursive;
-font-size:18px;
-transform:rotate(1deg);
-}
-.grid{
-display:grid;
-grid-template-columns:minmax(300px,370px) minmax(0,1fr);
-gap:34px;
-align-items:start;
-padding-top:24px;
-}
-.worksheet{min-width:0;}
-.section{margin-bottom:28px;}
-.section h3{
-margin:0 0 12px;
-font-family:"Architects Daughter","Comic Sans MS",cursive;
-font-size:24px;
-font-weight:400;
-line-height:1.1;
-}
-.formLine{
-display:grid;
-grid-template-columns:minmax(0,1fr) minmax(105px,48%);
-align-items:end;
-gap:12px;
-margin:14px 0;
-}
-.formLine.full{grid-template-columns:1fr;}
-.formLabel{min-width:0;}
-.underlineField{
-min-height:34px;
-display:flex;
-align-items:center;
-gap:8px;
-border-bottom:2px solid rgba(47,52,55,.72);
-padding:2px 2px 4px;
-color:var(--blue);
-}
-.underlineField input[type="range"]{
-min-width:0;
-flex:1;
-}
-.val,
-.resultValue,
-#cost,
-#floorsV,
-#pgaV,
-#freqV{
-color:var(--blue);
-font-weight:700;
-}
-input[type="range"]{
-width:100%;
-accent-color:var(--blue);
-cursor:pointer;
-}
-select{
-width:100%;
-border:0;
-border-bottom:2px solid rgba(47,52,55,.72);
-border-radius:0;
-background:transparent;
-color:var(--blue);
-padding:5px 2px 4px;
-outline:none;
-}
-.materials{
-display:flex;
-flex-wrap:wrap;
-gap:8px;
-margin-top:9px;
-}
-.mat{
-position:relative;
-border:1.6px solid var(--graphite);
-border-radius:2px 5px 3px 4px;
-background:rgba(233,239,217,.35);
-padding:6px 9px;
-cursor:pointer;
-transform:rotate(-.4deg);
-}
-.mat:nth-child(2){transform:rotate(.5deg);}
-.mat:nth-child(3){transform:rotate(-.2deg);}
-.mat.active{
-color:var(--blue);
-border-color:var(--blue);
-}
-.mat.active::after{
-content:"";
-position:absolute;
-left:6px;
-right:5px;
-bottom:2px;
-height:2px;
-background:var(--blue);
-transform:rotate(-2deg);
-}
-.small{
-color:var(--graphiteSoft);
-font-size:13px;
-line-height:1.35;
-}
-.storyList{
-display:grid;
-grid-template-columns:repeat(2,minmax(0,1fr));
-gap:6px 14px;
-margin-top:8px;
-}
-.story{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:8px;
-min-width:0;
-padding:3px 0;
-border-bottom:1px solid rgba(47,52,55,.22);
-}
-.story input,
-.check input{
-appearance:none;
-width:18px;
-height:18px;
-flex:0 0 18px;
-border:1.8px solid var(--graphite);
-border-radius:2px 3px 2px 4px;
-background:transparent;
-position:relative;
-cursor:pointer;
-}
-.story input:checked::after,
-.check input:checked::after{
-content:"✓";
-position:absolute;
-left:1px;
-top:-6px;
-font-family:"Architects Daughter","Comic Sans MS",cursive;
-font-size:24px;
-color:var(--blue);
-transform:rotate(-8deg);
-}
-.checks{
-display:grid;
-grid-template-columns:1fr;
-gap:8px;
-}
-.check{
-display:flex;
-gap:9px;
-align-items:center;
-}
-.note{
-margin:18px 2px 26px;
-background:#F4E8A9;
-padding:14px 16px 16px;
-box-shadow:2px 3px 0 rgba(47,52,55,.15);
-transform:rotate(-.7deg);
-clip-path:polygon(
-1% 2%,99% 0%,100% 96%,97% 100%,
-3% 99%,0% 94%
-);
-}
-.note summary{
-cursor:pointer;
-font-family:"Architects Daughter","Comic Sans MS",cursive;
-font-size:22px;
-list-style:none;
-}
-.note summary::-webkit-details-marker{display:none;}
-.note summary::before{content:"+ ";}
-.note[open] summary::before{content:"− ";}
-.note ol,
-.note ul{
-margin:9px 0 0 20px;
-padding:0;
-}
-.note li{margin:5px 0;}
-.challengeHeading{
-margin-top:11px;
-font-family:"Architects Daughter","Comic Sans MS",cursive;
-font-size:18px;
-}
-.btns{
-display:flex;
-gap:14px;
-align-items:center;
-margin:18px 0 8px;
-}
-.btn{
-border:0;
-cursor:pointer;
-}
-.run{
-position:relative;
-min-width:180px;
-padding:14px 22px;
-background:var(--tape);
-color:var(--graphite);
-font-family:"Architects Daughter","Comic Sans MS",cursive;
-font-size:21px;
-font-weight:400;
-box-shadow:1px 2px 0 rgba(47,52,55,.22);
-clip-path:polygon(
-3% 4%,8% 1%,13% 4%,18% 1%,23% 3%,
-28% 1%,34% 4%,40% 1%,46% 3%,52% 1%,
-58% 3%,64% 1%,70% 4%,76% 1%,82% 3%,
-88% 1%,94% 4%,98% 2%,100% 92%,96% 97%,
-90% 94%,84% 98%,77% 94%,70% 98%,64% 95%,
-57% 98%,50% 95%,43% 98%,36% 94%,29% 98%,
-22% 95%,15% 98%,8% 94%,2% 97%,0% 8%
-);
-transform:rotate(-1deg);
-}
-.run:hover{transform:rotate(-1deg) translateY(-1px);}
-.run:disabled{
-opacity:.55;
-cursor:default;
-}
-.reset{
-background:transparent;
-border-bottom:2px solid var(--graphite);
-padding:5px 3px 2px;
-font-family:"Architects Daughter","Comic Sans MS",cursive;
-font-size:18px;
-}
-.bestLine{
-margin-top:10px;
-font-family:"Architects Daughter","Comic Sans MS",cursive;
-font-size:18px;
-}
-.bestLine span{color:var(--blue);}
-.stage{min-width:0;}
-.resultsBlock{
-width:min(720px,100%);
-margin:0 0 14px auto;
-}
-.resultsTitle{
-margin:0 0 5px;
-font-family:"Architects Daughter","Comic Sans MS",cursive;
-font-size:23px;
-font-weight:400;
-}
-.resultsTable{
-width:100%;
-border-collapse:collapse;
-background:rgba(233,239,217,.38);
-}
-.resultsTable th,
-.resultsTable td{
-border-top:1px solid rgba(47,52,55,.52);
-border-bottom:1px solid rgba(47,52,55,.52);
-padding:6px 8px;
-vertical-align:baseline;
-}
-.resultsTable th{
-width:22%;
-text-align:left;
-font-weight:400;
-}
-.resultsTable td{
-width:28%;
-color:var(--blue);
-font-weight:700;
-}
-.resultsTable .statusCell{color:var(--graphite);}
-.canvasWrap{
-position:relative;
-width:100%;
-min-height:620px;
-overflow:hidden;
-border:1.8px solid rgba(47,52,55,.72);
-background:
-linear-gradient(to right,rgba(168,189,141,.45) 1px,transparent 1px),
-linear-gradient(to bottom,rgba(168,189,141,.45) 1px,transparent 1px),
-linear-gradient(to right,rgba(188,205,165,.28) 1px,transparent 1px),
-linear-gradient(to bottom,rgba(188,205,165,.28) 1px,transparent 1px),
-rgba(233,239,217,.72);
-background-size:
-100px 100px,
-100px 100px,
-20px 20px,
-20px 20px;
-}
-#sim{
-display:block;
-width:100%;
-height:620px;
-min-height:620px;
-touch-action:none;
-}
-.legend{
-position:absolute;
-left:14px;
-top:12px;
-max-width:220px;
-font-family:"Architects Daughter","Comic Sans MS",cursive;
-font-size:15px;
-color:var(--graphiteSoft);
-transform:rotate(-1deg);
-pointer-events:none;
-}
-.titleBlock{
-position:relative;
-margin:0 0 -1.8px auto;
-width:min(420px,100%);
-border:1.6px solid var(--graphite);
-border-right:0;
-border-bottom:0;
-background:rgba(233,239,217,.92);
-font-size:12px;
-z-index:3;
-}
-.titleRow{
-display:grid;
-grid-template-columns:1fr 1fr;
-border-bottom:1px solid var(--graphite);
-}
-.titleRow:last-child{border-bottom:0;}
-.titleCell{
-padding:5px 7px;
-min-width:0;
-}
-.titleCell + .titleCell{border-left:1px solid var(--graphite);}
-.titleBig{
-font-family:"Architects Daughter","Comic Sans MS",cursive;
-font-size:21px;
-}
-.designerInput{
-width:100%;
-border:0;
-border-bottom:1px solid var(--graphite);
-border-radius:0;
-background:transparent;
-color:var(--blue);
-outline:none;
-padding:1px 2px;
-}
-.stampOverlay{
-position:absolute;
-left:50%;
-top:48%;
-z-index:5;
-min-width:210px;
-padding:12px 20px 8px;
-border:5px double currentColor;
-color:var(--greenInk);
-font-family:"Architects Daughter","Comic Sans MS",cursive;
-text-align:center;
-line-height:1;
-opacity:0;
-pointer-events:none;
-transform:translate(-50%,-50%) rotate(-5deg) scale(1.7);
-mix-blend-mode:multiply;
-text-shadow:
-1px 0 currentColor,
--1px 1px rgba(47,52,55,.18);
-}
-.stampOverlay.fail{
-color:var(--red);
-transform:translate(-50%,-50%) rotate(4deg) scale(1.7);
-}
-.stampOverlay.show{animation:stampSlam 420ms cubic-bezier(.2,.8,.2,1) forwards;}
-.stampWord{
-display:block;
-font-size:42px;
-}
-.stampTime{
-display:block;
-margin-top:5px;
-font-size:17px;
-}
-@keyframes stampSlam{
-0%{opacity:0;transform:translate(-50%,-50%) rotate(-6deg) scale(2.2);}
-68%{opacity:.92;transform:translate(-50%,-50%) rotate(-4deg) scale(.94);}
-82%{transform:translate(-50%,-50%) rotate(-5deg) scale(1.04);}
-100%{opacity:.88;transform:translate(-50%,-50%) rotate(-5deg) scale(1);}
-}
-.stampOverlay.fail.show{animation-name:stampSlamFail;}
-@keyframes stampSlamFail{
-0%{opacity:0;transform:translate(-50%,-50%) rotate(6deg) scale(2.2);}
-68%{opacity:.92;transform:translate(-50%,-50%) rotate(3deg) scale(.94);}
-82%{transform:translate(-50%,-50%) rotate(4deg) scale(1.04);}
-100%{opacity:.9;transform:translate(-50%,-50%) rotate(4deg) scale(1);}
-}
-.bottom{
-display:grid;
-grid-template-columns:minmax(0,1.05fr) minmax(260px,.95fr);
-gap:26px;
-margin-top:22px;
-}
-.bottom h3{
-margin:0 0 8px;
-font-family:"Architects Daughter","Comic Sans MS",cursive;
-font-size:22px;
-font-weight:400;
-}
-.graphWrap{min-width:0;}
-#graph{
-display:block;
-width:100%;
-height:180px;
-min-height:180px;
-border-left:1px solid rgba(47,52,55,.55);
-border-bottom:1px solid rgba(47,52,55,.55);
-background:
-linear-gradient(to right,rgba(188,205,165,.35) 1px,transparent 1px),
-linear-gradient(to bottom,rgba(188,205,165,.35) 1px,transparent 1px);
-background-size:20px 20px;
-}
-.graphNote{
-margin-top:5px;
-color:var(--graphiteSoft);
-font-size:12px;
-}
-.why{
-padding-left:9px;
-border-left:3px solid rgba(47,52,55,.5);
-transform:rotate(.15deg);
-}
-.why div{margin:7px 0;}
-.statusGood{color:var(--greenInk)!important;}
-.statusBad{color:var(--red)!important;}
-.statusRun{color:var(--blue)!important;}
-@media(max-width:980px){
-.grid{grid-template-columns:320px minmax(0,1fr);gap:22px;}
-#sim{height:560px;min-height:560px;}
-.canvasWrap{min-height:560px;}
-}
-@media(max-width:859px){
-.app{padding:14px 12px 24px;}
-.top{align-items:flex-start;flex-direction:column;gap:8px;}
-.grid{grid-template-columns:1fr;gap:28px;}
-.worksheet{width:100%;}
-.resultsBlock{margin-left:0;}
-#sim{height:520px;min-height:520px;}
-.canvasWrap{min-height:520px;}
-.bottom{grid-template-columns:1fr;gap:22px;}
-}
-@media(max-width:520px){
-body{font-size:15px;}
-.app{padding-left:9px;padding-right:9px;}
-.top h1{font-size:42px;}
-.formLine{grid-template-columns:minmax(0,1fr) minmax(105px,46%);}
-.storyList{grid-template-columns:1fr 1fr;gap:4px 10px;}
-.btns{align-items:flex-start;flex-direction:column;}
-.run{width:min(260px,100%);}
-.resultsTable{font-size:13px;}
-.resultsTable th,
-.resultsTable td{padding:5px 4px;}
-#sim{height:460px;min-height:460px;}
-.canvasWrap{min-height:460px;}
-.titleBlock{width:100%;border-left:0;}
-.titleBig{font-size:16px;}
-.stampOverlay{min-width:170px;padding:9px 13px 6px;}
-.stampWord{font-size:34px;}
-}
-.introBtn{
-margin-top:10px;
-padding:2px 2px 3px;
-border:0;
-border-bottom:2px solid var(--blue);
-background:transparent;
-color:var(--blue);
-font-family:"Architects Daughter","Comic Sans MS",cursive;
-font-size:19px;
-cursor:pointer;
-}
-.introBtn:disabled{opacity:.5;cursor:default;}
-.introFocus{
-outline:2.5px solid var(--blue);
-outline-offset:6px;
-border-radius:4px;
-}
-.introCaption{
-position:fixed;
-left:50%;
-bottom:18px;
-z-index:50;
-width:min(760px,calc(100% - 24px));
-display:flex;
-gap:16px;
-align-items:center;
-padding:14px 18px;
-background:#F4E8A9;
-box-shadow:2px 3px 0 rgba(47,52,55,.22);
-transform:translateX(-50%) rotate(-.6deg);
-font-family:"Architects Daughter","Comic Sans MS",cursive;
-font-size:22px;
-line-height:1.25;
-color:var(--graphite);
-}
-.introCaption[hidden]{display:none;}
-#introText{flex:1;}
-.introSkip{
-flex:0 0 auto;
-padding:2px;
-border:0;
-border-bottom:2px solid var(--graphite);
-background:transparent;
-font-family:inherit;
-font-size:17px;
-cursor:pointer;
-}
-@media(max-width:520px){
-.introCaption{bottom:10px;padding:11px 13px;font-size:18px;}
-}
-@media(prefers-reduced-motion:reduce){
-*,
-*::before,
-*::after{
-scroll-behavior:auto!important;
-animation-duration:.001ms!important;
-animation-iteration-count:1!important;
-transition-duration:.001ms!important;
-}
-.stampOverlay.show,
-.stampOverlay.fail.show{
-animation:none;
-opacity:.88;
-transform:translate(-50%,-50%) rotate(-4deg) scale(1);
-}
-.stampOverlay.fail.show{transform:translate(-50%,-50%) rotate(4deg) scale(1);}
-}
+:root{--paper:#E9EFD9;--grid:#BCCDA5;--major:#A8BD8D;--ink:#2F3437;--soft:#646A64;--blue:#2B4C9B;--red:#C8352B;--green:#425B46;--yellow:#C5962F;--tape:#E3CF8E;--wood:#C99E64;--stone:#A6A9A5;--steel:#7189A4;--brace:#2B4C9B}
+*{box-sizing:border-box}
+html{background:var(--paper)}
+body{margin:0;min-width:0;overflow-x:hidden;color:var(--ink);font-family:"Atkinson Hyperlegible",Arial,sans-serif;background-color:var(--paper);background-image:linear-gradient(to right,rgba(168,189,141,.64) 1px,transparent 1px),linear-gradient(to bottom,rgba(168,189,141,.64) 1px,transparent 1px),linear-gradient(to right,rgba(188,205,165,.42) 1px,transparent 1px),linear-gradient(to bottom,rgba(188,205,165,.42) 1px,transparent 1px);background-size:100px 100px,100px 100px,20px 20px,20px 20px}
+button,input,select{font:inherit}button{color:inherit}.app{width:min(1460px,100%);margin:auto;padding:18px 22px 28px}.top{display:flex;align-items:end;justify-content:space-between;gap:20px;padding:0 3px 13px;border-bottom:2px solid rgba(47,52,55,.7)}h1,h2,h3,.hand{font-family:"Architects Daughter","Comic Sans MS",cursive;font-weight:400}.top h1{font-size:clamp(38px,5vw,60px);line-height:1;margin:0;transform:rotate(-1deg)}.sub{color:var(--soft);margin-top:5px}.clubMark{font-family:"Architects Daughter","Comic Sans MS",cursive;font-size:18px}.layout{display:grid;grid-template-columns:minmax(300px,390px) minmax(0,1fr);gap:30px;padding-top:22px}.sidebar{min-width:0}.section{margin-bottom:24px}.section h2{font-size:25px;margin:0 0 10px}.sectionNote{font-size:13px;color:var(--soft);margin:4px 0 10px}.tray{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.trayItem{min-height:91px;border:1.7px solid rgba(47,52,55,.72);background:rgba(233,239,217,.5);padding:8px;text-align:left;cursor:pointer;border-radius:3px;position:relative;display:grid;grid-template-columns:46px 1fr;gap:7px;align-items:center;box-shadow:1px 1px 0 rgba(47,52,55,.12)}.trayItem:nth-child(odd){transform:rotate(-.2deg)}.trayItem:nth-child(even){transform:rotate(.25deg)}.trayItem:hover,.trayItem:focus-visible{outline:3px solid rgba(43,76,155,.27);outline-offset:2px}.trayItem.selected{border:3px solid var(--blue);padding:6.7px;color:var(--blue);background:rgba(255,255,255,.2)}.trayItem svg{width:44px;height:44px;overflow:visible}.trayName{display:block;font-weight:700}.trayDesc{display:block;font-size:12px;line-height:1.12;color:var(--soft)}.trayCost{display:block;font-size:12px;color:var(--blue);margin-top:3px}.utilityRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:9px}.paperBtn{border:0;border-bottom:2px solid var(--ink);background:transparent;padding:3px 2px;cursor:pointer;font-family:"Architects Daughter","Comic Sans MS",cursive;font-size:17px}.quakePicker{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.quakeCard{border:1.7px solid var(--ink);background:rgba(233,239,217,.48);padding:9px 5px;min-height:108px;cursor:pointer;text-align:center;border-radius:3px}.quakeCard.selected{border:3px solid var(--blue);padding:7.7px;color:var(--blue)}.quakeIcon{display:block;font-size:31px;line-height:1}.quakeCard b{display:block;margin-top:5px}.quakeCard small{display:block;color:var(--soft);line-height:1.1;margin-top:3px}.fineTune{margin-top:12px;border-left:3px solid rgba(47,52,55,.45);padding-left:10px}.fineTune summary{font-family:"Architects Daughter","Comic Sans MS",cursive;font-size:19px;cursor:pointer}.sliderRow{margin:10px 0}.sliderLabel{display:flex;justify-content:space-between;gap:8px;align-items:end}.sliderLabel small{color:var(--soft)}input[type=range]{width:100%;accent-color:var(--blue)}.challengeNote{background:#F4E8A9;padding:12px 15px;margin-top:18px;box-shadow:2px 3px 0 rgba(47,52,55,.14);clip-path:polygon(1% 2%,99% 0%,100% 96%,97% 100%,3% 99%,0 94%);transform:rotate(-.45deg)}.challengeNote summary{font-family:"Architects Daughter","Comic Sans MS",cursive;font-size:20px;cursor:pointer}.challengeNote li{margin:5px 0}.btns{display:flex;align-items:center;gap:14px;margin-top:17px}.run{border:0;min-width:170px;padding:13px 20px;background:var(--tape);font-family:"Architects Daughter","Comic Sans MS",cursive;font-size:21px;cursor:pointer;clip-path:polygon(3% 4%,8% 1%,14% 4%,20% 1%,27% 3%,34% 1%,41% 4%,48% 1%,55% 3%,62% 1%,69% 4%,76% 1%,83% 3%,90% 1%,97% 4%,100% 94%,95% 98%,87% 95%,78% 98%,69% 95%,60% 98%,51% 95%,42% 98%,33% 95%,24% 98%,15% 95%,6% 98%,0 94%,0 7%);transform:rotate(-1deg);box-shadow:1px 2px 0 rgba(47,52,55,.2)}.run:disabled{opacity:.5}.reset{border:0;border-bottom:2px solid var(--ink);background:none;padding:4px 2px;cursor:pointer;font-family:"Architects Daughter","Comic Sans MS",cursive;font-size:18px}.best{font-family:"Architects Daughter","Comic Sans MS",cursive;font-size:17px;margin-top:10px}.best span{color:var(--blue)}.stage{min-width:0}.results{display:grid;grid-template-columns:minmax(240px,.8fr) minmax(250px,1.2fr);gap:16px;margin-bottom:13px}.sheetBox{border-top:1.4px solid rgba(47,52,55,.65);border-bottom:1.4px solid rgba(47,52,55,.65);padding:8px 4px}.sheetBox h3{font-size:22px;margin:0 0 6px}.wobble{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:center}.gauge{position:relative;width:146px;height:78px;overflow:hidden}.gaugeArc{position:absolute;width:146px;height:146px;border-radius:50%;background:conic-gradient(from 270deg,var(--green) 0 65deg,var(--yellow) 65deg 112deg,var(--red) 112deg 180deg,transparent 180deg);mask:radial-gradient(circle at center,transparent 0 49px,#000 50px 67px,transparent 68px);-webkit-mask:radial-gradient(circle at center,transparent 0 49px,#000 50px 67px,transparent 68px)}.gaugeNeedle{position:absolute;left:72px;bottom:4px;width:3px;height:58px;background:var(--ink);transform-origin:50% 100%;transform:rotate(-90deg);border-radius:2px;transition:transform .18s}.gaugeHub{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--ink);left:68px;bottom:0}.wobbleValue{font-size:26px;color:var(--blue);font-family:"Architects Daughter","Comic Sans MS",cursive}.rhythmPair{display:grid;grid-template-columns:1fr 1fr;gap:9px}.rhythmNumber{font-size:22px;color:var(--blue);font-family:"Architects Daughter","Comic Sans MS",cursive}.matchTrack{height:12px;border:1px solid var(--ink);position:relative;margin-top:8px;background:rgba(255,255,255,.22)}.matchFill{height:100%;width:0;background:var(--green);transition:width .2s,background .2s}.matchText{margin-top:4px;font-size:13px}.matchText.danger{color:var(--red);font-weight:700}.mainResult{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:9px}.stars{font-size:28px;letter-spacing:2px;color:#B28B24;min-height:35px}.scoreLine{font-size:13px;color:var(--soft)}.scoreLine span{color:var(--blue);font-weight:700}.coins{font-size:19px}.coins b{color:var(--blue)}.canvasBorder{border:1.8px solid rgba(47,52,55,.72);background:rgba(233,239,217,.4);overflow:hidden}.canvasWrap{position:relative;min-height:600px;background-image:linear-gradient(to right,rgba(188,205,165,.3) 1px,transparent 1px),linear-gradient(to bottom,rgba(188,205,165,.3) 1px,transparent 1px);background-size:20px 20px}.canvasWrap canvas{display:block;width:100%;height:600px;touch-action:manipulation;cursor:crosshair}.canvasWrap:focus-visible{outline:4px solid rgba(43,76,155,.3);outline-offset:-4px}.canvasHint{position:absolute;left:12px;top:10px;font-family:"Architects Daughter","Comic Sans MS",cursive;color:var(--soft);font-size:14px;pointer-events:none}.titleBlock{margin-left:auto;width:min(410px,100%);border-left:1px solid var(--ink);border-top:1px solid var(--ink);font-size:11px}.titleRow{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--ink)}.titleRow:last-child{border-bottom:0}.titleCell{padding:4px 7px}.titleCell+.titleCell{border-left:1px solid var(--ink)}.titleBig{font-family:"Architects Daughter","Comic Sans MS",cursive;font-size:18px}.designerInput{width:100%;border:0;border-bottom:1px solid var(--ink);background:transparent;color:var(--blue);outline:0}.stampOverlay{position:absolute;left:50%;top:47%;z-index:8;min-width:205px;padding:11px 18px 8px;border:5px double currentColor;color:var(--green);font-family:"Architects Daughter","Comic Sans MS",cursive;text-align:center;line-height:1;opacity:0;pointer-events:none;transform:translate(-50%,-50%) rotate(-5deg) scale(1.7);mix-blend-mode:multiply}.stampOverlay.fail{color:var(--red);transform:translate(-50%,-50%) rotate(4deg) scale(1.7)}.stampOverlay.show{animation:stamp .42s cubic-bezier(.2,.8,.2,1) forwards}.stampWord{display:block;font-size:41px}.stampTime{display:block;font-size:16px;margin-top:4px}@keyframes stamp{0%{opacity:0;transform:translate(-50%,-50%) rotate(-5deg) scale(2.1)}70%{opacity:.93;transform:translate(-50%,-50%) rotate(-5deg) scale(.94)}100%{opacity:.88;transform:translate(-50%,-50%) rotate(-5deg) scale(1)}}.explain{display:grid;grid-template-columns:1fr auto;gap:18px;margin-top:18px;align-items:start}.what{border-left:3px solid rgba(47,52,55,.5);padding-left:10px}.what h3{margin:0 0 5px;font-size:23px}.what div{margin:6px 0}.introBtn{border:0;background:none;border-bottom:2px solid var(--blue);color:var(--blue);font-family:"Architects Daughter","Comic Sans MS",cursive;font-size:18px;cursor:pointer}.introOverlay{position:fixed;inset:0;background:rgba(47,52,55,.26);z-index:50;display:none;pointer-events:none}.introOverlay.show{display:block}.introBubble{pointer-events:auto;position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:min(560px,calc(100% - 24px));padding:14px 16px;background:#F4E8A9;border:1.6px solid var(--ink);box-shadow:3px 4px 0 rgba(47,52,55,.25);clip-path:polygon(1% 2%,99% 0%,100% 95%,97% 100%,3% 99%,0 94%)}.introBubble h3{font-size:22px;margin:0 0 4px}.introActions{display:flex;justify-content:flex-end;gap:12px;margin-top:9px}.introActions button{border:0;background:none;border-bottom:2px solid var(--ink);cursor:pointer}.introFocus{position:relative;z-index:60!important;outline:5px solid var(--blue)!important;outline-offset:5px!important;background-color:var(--paper)!important}.compat{display:none!important}
+@media(max-width:900px){.layout{grid-template-columns:330px minmax(0,1fr);gap:19px}.canvasWrap,.canvasWrap canvas{height:540px;min-height:540px}.results{grid-template-columns:1fr}}
+@media(max-width:859px){.app{padding:12px 9px 22px}.top{align-items:start;flex-direction:column;gap:5px}.layout{grid-template-columns:1fr;gap:25px}.stage{scroll-margin-top:6px}.canvasWrap,.canvasWrap canvas{height:500px;min-height:500px}.quakePicker{grid-template-columns:repeat(3,1fr)}.results{grid-template-columns:1fr 1fr}.titleBlock{width:100%;border-left:0}.tray{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:500px){.top h1{font-size:42px}.trayItem{min-height:82px;padding:6px;grid-template-columns:39px 1fr}.trayItem svg{width:37px;height:37px}.quakePicker{gap:5px}.quakeCard{font-size:13px;min-height:104px}.results{grid-template-columns:1fr}.wobble{grid-template-columns:138px 1fr}.canvasWrap,.canvasWrap canvas{height:455px;min-height:455px}.titleRow{grid-template-columns:1fr}.titleCell+.titleCell{border-left:0;border-top:1px solid var(--ink)}.btns{align-items:flex-start;flex-wrap:wrap}.stampWord{font-size:34px}.explain{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.001ms!important;transition-duration:.001ms!important}.stampOverlay.show{animation:none;opacity:.88;transform:translate(-50%,-50%) rotate(-5deg) scale(1)}}
 </style>
 </head>
 <body>
 <div class="app">
-<header class="top">
-<div>
-<h1>QuakeLab</h1>
-<div class="sub">
-Design a building, put it on the shake table, and find out if it stays standing.
+<header class="top"><div><h1>QuakeLab</h1><div class="sub">Build a tower. Shake the table. Figure out why it stands—or falls.</div></div><div class="clubMark">Gilman Engineering Club</div></header>
+<div class="layout">
+<aside class="sidebar">
+<section class="section" id="buildArea"><h2>Build your tower</h2><div class="sectionNote">Pick a piece, then tap the drawing. Tap a row to change it.</div>
+<div class="tray" id="tray">
+<button class="trayItem" data-tool="wood"><svg viewBox="0 0 64 50" aria-hidden="true"><rect x="5" y="15" width="54" height="28" rx="3" fill="#C99E64" stroke="#2F3437" stroke-width="2"/><ellipse cx="18" cy="15" rx="7" ry="3.5" fill="#E2BB80" stroke="#2F3437"/><ellipse cx="46" cy="15" rx="7" ry="3.5" fill="#E2BB80" stroke="#2F3437"/></svg><span><span class="trayName">Wood brick</span><span class="trayDesc">Light and cheap but bendy</span><span class="trayCost">8 coins / row</span></span></button>
+<button class="trayItem" data-tool="concrete"><svg viewBox="0 0 64 50" aria-hidden="true"><rect x="5" y="15" width="54" height="28" rx="3" fill="#A6A9A5" stroke="#2F3437" stroke-width="2"/><ellipse cx="18" cy="15" rx="7" ry="3.5" fill="#C3C5C2" stroke="#2F3437"/><ellipse cx="46" cy="15" rx="7" ry="3.5" fill="#C3C5C2" stroke="#2F3437"/></svg><span><span class="trayName">Stone brick</span><span class="trayDesc">Medium strength</span><span class="trayCost">12 coins / row</span></span></button>
+<button class="trayItem selected" data-tool="steel"><svg viewBox="0 0 64 50" aria-hidden="true"><rect x="5" y="15" width="54" height="28" rx="3" fill="#7189A4" stroke="#2F3437" stroke-width="2"/><ellipse cx="18" cy="15" rx="7" ry="3.5" fill="#9AAEC2" stroke="#2F3437"/><ellipse cx="46" cy="15" rx="7" ry="3.5" fill="#9AAEC2" stroke="#2F3437"/></svg><span><span class="trayName">Steel brick</span><span class="trayDesc">Strongest</span><span class="trayCost">15 coins / row</span></span></button>
+<button class="trayItem" data-tool="brace"><svg viewBox="0 0 64 50" aria-hidden="true"><rect x="7" y="8" width="50" height="35" fill="none" stroke="#2F3437" stroke-width="2"/><path d="M9 41L55 10M9 10L55 41" stroke="#2B4C9B" stroke-width="4"/></svg><span><span class="trayName">X-brace</span><span class="trayDesc">Stiffens one row</span><span class="trayCost">4 coins</span></span></button>
+<button class="trayItem" data-tool="isolation"><svg viewBox="0 0 64 50" aria-hidden="true"><rect x="5" y="12" width="54" height="8" fill="#7189A4" stroke="#2F3437"/><rect x="9" y="24" width="12" height="13" rx="4" fill="#555B58"/><rect x="26" y="24" width="12" height="13" rx="4" fill="#555B58"/><rect x="43" y="24" width="12" height="13" rx="4" fill="#555B58"/><path d="M5 42H59" stroke="#2F3437" stroke-width="2"/></svg><span><span class="trayName">Spring feet</span><span class="trayDesc">Lets the tower slide on rubber pads</span><span class="trayCost">18 coins</span></span></button>
+<button class="trayItem" data-tool="tmd"><svg viewBox="0 0 64 50" aria-hidden="true"><path d="M9 9H55M32 9V23" stroke="#2F3437" stroke-width="2"/><path d="M32 23L43 35" stroke="#2F3437" stroke-width="2"/><rect x="35" y="31" width="17" height="12" rx="2" fill="#7189A4" stroke="#2F3437"/></svg><span><span class="trayName">Swinging weight</span><span class="trayDesc">Swings against the tower's sway</span><span class="trayCost">14 coins</span></span></button>
+<button class="trayItem" data-tool="eraser"><svg viewBox="0 0 64 50" aria-hidden="true"><path d="M17 38L8 29L33 6L53 25L36 42H21Z" fill="#E6B2A7" stroke="#2F3437" stroke-width="2"/><path d="M17 38L36 19" stroke="#2F3437"/></svg><span><span class="trayName">Eraser</span><span class="trayDesc">Removes the row you tap</span><span class="trayCost">Minimum 2 rows</span></span></button>
 </div>
-<button id="introBtn" class="introBtn" type="button">▶ Watch the 1-minute intro</button>
+<div class="utilityRow"><button id="clearDefault" class="paperBtn">Clear to default</button><button id="playIntroBtn" class="paperBtn">Show me how</button></div></section>
+<section class="section" id="quakeArea"><h2>Choose a shake</h2><div class="quakePicker">
+<button class="quakeCard" data-preset-card="gentle"><span class="quakeIcon">〰</span><b>Small quake</b><small>A gentle test</small></button>
+<button class="quakeCard selected" data-preset-card="strong"><span class="quakeIcon">↔</span><b>Big quake</b><small>A hard shake</small></button>
+<button class="quakeCard" data-preset-card="resonance"><span class="quakeIcon">♫</span><b>Rhythm trap</b><small>Shakes at your tower's own rhythm</small></button>
 </div>
-<div class="clubMark">
-Gilman Engineering Club
-</div>
-</header>
-<div class="grid">
-<aside class="worksheet">
-<section class="section">
-<h3>Building design</h3>
-<div class="formLine">
-<div class="formLabel">Number of floors</div>
-<div class="underlineField">
-<input id="floors" type="range" min="2" max="10" value="6">
-<span id="floorsV" class="val">6</span>
-</div>
-</div>
-<div class="formLine full">
-<div class="formLabel">Column material</div>
-<div class="materials">
-<button class="mat" data-mat="wood">Wood</button>
-<button class="mat active" data-mat="steel">Steel</button>
-<button class="mat" data-mat="concrete">Reinforced concrete</button>
-</div>
-</div>
-<div id="matInfo" class="small"></div>
-<div class="formLine full">
-<div>
-<div class="formLabel">Add X-bracing</div>
-<div id="storyList" class="storyList"></div>
-</div>
-</div>
-</section>
-<section class="section">
-<h3>Protection systems</h3>
-<div class="checks">
-<label class="check">
-<input id="isolation" type="checkbox">
-<span>Base isolation</span>
-</label>
-<label class="check">
-<input id="tmd" type="checkbox">
-<span>Tuned mass damper</span>
-</label>
-</div>
-<div class="small" style="margin-top:8px">
-Isolation lets the base move. The roof damper is tuned automatically near the first vibration mode.
-</div>
-</section>
-<section class="section">
-<h3>Earthquake input</h3>
-<div class="formLine full">
-<label>
-Test
-<select id="preset">
-<option value="gentle">Gentle</option>
-<option value="strong" selected>Strong</option>
-<option value="resonance">Resonance Trap</option>
-</select>
-</label>
-</div>
-<div class="formLine">
-<div class="formLabel">Peak ground acceleration</div>
-<div class="underlineField">
-<input id="pga" type="range" min="0.05" max="1.20" step="0.01" value="0.62">
-<span id="pgaV" class="val">0.62 g</span>
-</div>
-</div>
-<div class="formLine">
-<div class="formLabel">Dominant frequency</div>
-<div class="underlineField">
-<input id="freq" type="range" min="0.20" max="3.00" step="0.01" value="1.20">
-<span id="freqV" class="val">1.20 Hz</span>
-</div>
-</div>
-</section>
-<section class="section">
-<h3>Cost check</h3>
-<div class="formLine">
-<div>Budget</div>
-<div class="underlineField">
-<span>$<span id="budget">120</span>k</span>
-</div>
-</div>
-<div class="formLine">
-<div>Your design</div>
-<div id="cost" class="underlineField">
-$0k
-</div>
-</div>
-<div class="small">
-A story fails past 2.5% drift.<br>
-Isolation bearings can travel 45 cm.
-</div>
-</section>
-<details class="note">
-<summary>How to play</summary>
-<ol>
-<li>Build a design and stay near the budget.</li>
-<li>Choose an earthquake and run the shake table.</li>
-<li>Use the frequency and drift results to redesign.</li>
-</ol>
-<div class="challengeHeading">Club challenges</div>
-<ul>
-<li>Survive <b>Strong</b> under $120k.</li>
-<li>Beat the <b>Resonance Trap</b> without base isolation.</li>
-<li>Find a case where adding bracing makes the result worse.</li>
-</ul>
-</details>
-<div class="btns">
-<button id="run" class="btn run">
-Run shake test
-</button>
-<button id="reset" class="btn reset">
-Reset
-</button>
-</div>
-<div class="bestLine">
-Best score on this device:
-<span id="bestScore">—</span>
-</div>
+<details class="fineTune"><summary>Fine-tune</summary><div class="sliderRow"><div class="sliderLabel"><span>Shake strength</span><small id="pgaV">0.62 g</small></div><input id="pga" type="range" min=".05" max="1.20" step=".01" value=".62"></div><div class="sliderRow"><div class="sliderLabel"><span>Shake speed</span><small><span id="freqV">1.20</span> shakes/sec</small></div><input id="freq" type="range" min=".20" max="3.00" step=".01" value="1.20"></div></details></section>
+<details class="challengeNote"><summary>Club challenges</summary><ol><li>Survive the <b>Big quake</b> while spending no more than 120 coins.</li><li>Beat the <b>Rhythm trap</b> without spring feet.</li><li>Find a tower where adding an X-brace actually makes the shaking worse.</li></ol></details>
+<div class="btns"><button id="run" class="run">Run shake test</button><button id="reset" class="reset">Reset test</button></div><div class="best">Best score on this device: <span id="bestScore">—</span></div>
 </aside>
 <main class="stage">
-<section class="resultsBlock">
-<h2 class="resultsTitle">Results</h2>
-<table class="resultsTable">
-<tbody>
-<tr>
-<th>Natural frequency</th>
-<td id="natF">—</td>
-<th>Quake frequency</th>
-<td id="quakeF">—</td>
-</tr>
-<tr>
-<th>Natural period</th>
-<td id="period">—</td>
-<th>Peak story drift</th>
-<td id="storyDrift">0.00%</td>
-</tr>
-<tr>
-<th>Base travel</th>
-<td id="baseTravel">0.0 cm</td>
-<th>Cost / budget</th>
-<td>
-<span id="costResult">See worksheet</span>
-</td>
-</tr>
-<tr>
-<th>Outcome</th>
-<td id="status" class="statusCell">Ready</td>
-<th>Score</th>
-<td id="score">—</td>
-</tr>
-</tbody>
-</table>
+<section class="results" id="resultsArea">
+<div class="sheetBox" id="wobbleBox"><h3>Wobble meter</h3><div class="wobble"><div class="gauge"><div class="gaugeArc"></div><div id="wobbleNeedle" class="gaugeNeedle"></div><div class="gaugeHub"></div></div><div><div id="wobbleValue" class="wobbleValue">0.00%</div><div id="wobbleWords">Barely moving</div><small>Red starts at the tower's failure limit.</small></div></div></div>
+<div class="sheetBox" id="rhythmBox"><h3>Rhythm check</h3><div class="rhythmPair"><div>Tower rhythm<br><span id="towerRhythm" class="rhythmNumber">0.90</span> <small>sways/sec</small></div><div>Quake rhythm<br><span id="quakeRhythm" class="rhythmNumber">1.20</span> <small>shakes/sec</small></div></div><div class="matchTrack"><div id="matchFill" class="matchFill"></div></div><div id="matchText" class="matchText">Rhythms are apart.</div><div class="mainResult"><div><div id="stars" class="stars">☆☆☆</div><div class="scoreLine">Competition score: <span id="score">—</span></div></div><div class="coins">Coins: <b id="coinReadout">90 / 120</b></div></div></div>
 </section>
-<div class="canvasWrap">
-<canvas id="sim"></canvas>
-<div class="legend">
-Motion exaggerated for visibility.<br>
-Pencil sketch, not to scale.
+<div class="canvasBorder">
+<div id="canvasWrap" class="canvasWrap"><canvas id="sim" tabindex="0" role="button" aria-label="Tower building area. Pick a piece then tap a row or the top of the tower."></canvas><div class="canvasHint">Pick a piece → tap the tower</div><div id="stampOverlay" class="stampOverlay" aria-hidden="true"><span class="stampWord">PASSED</span><span class="stampTime">15.0 s</span></div></div>
+<div class="titleBlock"><div class="titleRow"><div class="titleCell titleBig">QuakeLab</div><div class="titleCell">Gilman Engineering Club</div></div><div class="titleRow"><div class="titleCell">Tower shake test</div><div class="titleCell">Designed by: <input id="designerName" class="designerInput" maxlength="28" placeholder="your name"></div></div></div>
 </div>
-<div id="stampOverlay" class="stampOverlay" aria-hidden="true">
-<span class="stampWord">PASSED</span>
-<span class="stampTime">15.0 s</span>
-</div>
-<div class="titleBlock">
-<div class="titleRow">
-<div class="titleCell titleBig">
-QuakeLab
-</div>
-<div class="titleCell">
-Gilman Engineering Club
-</div>
-</div>
-<div class="titleRow">
-<div class="titleCell">
-Sheet 1 of 1
-</div>
-<div class="titleCell">
-Structural shake test
-</div>
-</div>
-<div class="titleRow">
-<div class="titleCell">
-Designed by:
-</div>
-<div class="titleCell">
-<input id="designerName" class="designerInput" type="text" maxlength="28" aria-label="Designer name" placeholder="write your name">
-</div>
-</div>
-</div>
-</div>
-<div class="bottom">
-<section class="graphWrap">
-<h3>Drift history</h3>
-<canvas id="graph"></canvas>
-<div class="graphNote">
-Roof drift over the 15-second test. The red dashed line is the 2.5% failure limit.
-</div>
-</section>
-<section>
-<h3>Why did that happen?</h3>
-<div id="why" class="why">
-<div>
-Run a shake test to get an engineering explanation.
-</div>
-</div>
-</section>
-</div>
+<div class="explain"><section class="what"><h3>What happened?</h3><div id="why"><div>Run a shake test and we'll explain what your tower did.</div></div></section><button class="introBtn" id="introAgain">Replay guide</button></div>
 </main>
 </div>
+<div class="compat" aria-hidden="true">
+<input id="floors" type="number" value="6"><span id="floorsV">6</span><div id="storyList"></div><div id="matInfo"></div><input id="isolation" type="checkbox"><input id="tmd" type="checkbox"><select id="preset"><option value="gentle">gentle</option><option value="strong" selected>strong</option><option value="resonance">resonance</option></select><span id="budget">120</span><span id="cost"></span><span id="natF"></span><span id="period"></span><span id="quakeF"></span><span id="storyDrift"></span><span id="baseTravel"></span><span id="status">Ready</span><canvas id="graph"></canvas>
 </div>
-<div id="introCaption" class="introCaption" hidden>
-<span id="introText"></span>
-<button id="introSkip" class="introSkip" type="button">Skip</button>
+<div id="introOverlay" class="introOverlay"><div class="introBubble"><h3 id="introTitle">Build with bricks</h3><div id="introText"></div><div class="introActions"><button id="introSkip">Skip</button><button id="introNext">Next</button></div></div></div>
 </div>
 <script>
 (()=>{
@@ -839,11 +76,7 @@ freq:$("freq"),freqV:$("freqV"),cost:$("cost"),budget:$("budget"),run:$("run"),r
 natF:$("natF"),period:$("period"),quakeF:$("quakeF"),storyDrift:$("storyDrift"),
 baseTravel:$("baseTravel"),status:$("status"),score:$("score"),why:$("why")
 };
-const materials={
-wood:{k:5.5e6,cost:8,label:"Wood"},
-steel:{k:12e6,cost:15,label:"Steel"},
-concrete:{k:9e6,cost:12,label:"Reinforced concrete"}
-};
+
 const floorMass=22000;
 const baseMass=22000;
 const storyHeight=3.2;
@@ -857,16 +90,13 @@ const isolationLimit=0.45;
 const structuralDamping=0.05;
 const isolationDamping=0.15;
 const isolationPeriod=2.5;
-let material="steel";
-let braced=[];
 let state=null;
 let running=false;
 let lastFrame=0;
 let accumulator=0;
 let history=[];
-let timeScale=1; /* playback speed only; the physics step size never changes */
 ui.budget.textContent=budgetK;
-/* -------------------- MATRIX HELPERS -------------------- */
+/* -------------------- TESTED PHYSICS (unchanged) -------------------- */
 function zeros(n){return Array.from({length:n},()=>Array(n).fill(0));}
 function identity(n){return Array.from({length:n},(_,i)=>Array.from({length:n},(_,j)=>i===j ? 1 : 0));}
 function addSpring(K,a,b,k){
@@ -914,12 +144,6 @@ for(let i=0;i<n;i++){for(let j=0;j<n;j++){C[i][j]=a1*K[i][j];if(i===j){C[i][i]+=
 return C;
 }
 function matVec(A,x){return A.map(row=>row.reduce((sum,v,j)=>sum+v*x[j],0));}
-/* -------------------- BUILDING MODEL -------------------- */
-function storyStiffnesses(customBracing=braced){
-const n=+ui.floors.value;const ks=[];
-for(let i=0;i<n;i++){ks.push(materials[material].k*(customBracing[i]? braceMultiplier: 1));}
-return ks;
-}
 function buildFixedBaseMatrices(customBracing=braced){
 const n=+ui.floors.value;
 const ks=storyStiffnesses(customBracing);
@@ -963,62 +187,6 @@ const sys=buildPrimarySystem(customBracing,forceIsolation);
 const ws=modalFrequencies(sys.K,sys.masses);
 return ws[0]/(2*Math.PI);
 }
-/* -------------------- COST / UI -------------------- */
-function totalCost(){
-const n=+ui.floors.value;
-let cost=n*materials[material].cost;
-cost+=braced.slice(0,n).filter(Boolean).length*braceCost;
-if(ui.isolation.checked){cost+=isolationCost;}
-if(ui.tmd.checked){cost+=tmdCost;}
-return cost;
-}
-function buildStoryUI(){
-const n=+ui.floors.value;
-while(braced.length<n){braced.push(false);}
-braced=braced.slice(0,n);
-ui.storyList.innerHTML="";
-for(let i=0;i<n;i++){
-const label=document.createElement("label");
-label.className="story";
-label.innerHTML=`<span>Story ${i+1}</span>
-<input type="checkbox"
-${braced[i]?"checked":""}>`;
-label.querySelector("input").onchange=e=>{braced[i]=e.target.checked;updateDesign(true);};
-ui.storyList.appendChild(label);
-}
-}
-function syncResonanceFrequency(){
-if(ui.preset.value!=="resonance") return;
-const f1=primaryNaturalFrequency();
-ui.freq.value=Math.max(0.20,Math.min(3,f1)).toFixed(2);
-}
-function applyPreset(){
-if(ui.preset.value==="gentle"){ui.pga.value=0.18;ui.freq.value=0.75;}
-else if(ui.preset.value==="strong"){ui.pga.value=0.62;ui.freq.value=1.20;}
-else{ui.pga.value=0.35;syncResonanceFrequency();}
-updateDesign(false);
-}
-function updateDesign(designChanged=false){
-if(designChanged && ui.preset.value==="resonance"){syncResonanceFrequency();}
-const f1=primaryNaturalFrequency();
-const cost=totalCost();
-ui.floorsV.textContent=ui.floors.value;
-ui.matInfo.textContent=`${materials[material].label}: `+`${(materials[material].k/1e6).toFixed(1)} MN/m per story, `+`$${materials[material].cost}k per floor`;
-ui.pgaV.textContent=(+ui.pga.value).toFixed(2)+" g";
-ui.freqV.textContent=(+ui.freq.value).toFixed(2)+" Hz";
-ui.cost.textContent=`$${cost}k`;
-ui.cost.style.color=cost>budgetK? "var(--red)": "var(--blue)";
-const costResult=document.getElementById("costResult");
-if(costResult){
-costResult.textContent=`$${cost}k / $${budgetK}k`;
-costResult.style.color=cost>budgetK? "var(--red)": "var(--blue)";
-}
-ui.natF.textContent=f1.toFixed(2)+" Hz";
-ui.period.textContent=(1/f1).toFixed(2)+" s";
-ui.quakeF.textContent=(+ui.freq.value).toFixed(2)+" Hz";
-if(!running){draw();}
-}
-/* -------------------- EARTHQUAKE -------------------- */
 function groundAcceleration(t){
 const duration=15;
 const pga=+ui.pga.value*9.81;
@@ -1030,7 +198,6 @@ const side=0.22*Math.sin(2*Math.PI*(f*1.73)*t+1.1);
 const noise=0.10*Math.sin(2*Math.PI*6.7*t+2.4)*Math.sin(2*Math.PI*0.37*t);
 return(pga*ramp*(main+side+noise)/1.28);
 }
-/* -------------------- STATE / TMD -------------------- */
 function newState(){
 const n=+ui.floors.value;
 const sys=buildPrimarySystem();
@@ -1052,7 +219,6 @@ tmd={m:mt,k:kt,c:ct,x:0,v:0,ft,zeta:zetaT};
 return{n,sys,x:Array(sys.masses.length).fill(0),v:Array(sys.masses.length).fill(0),t:0,f1,tmd,
 maxRoofDrift:0,maxStoryDrift:0,maxBaseTravel:0,failed:false,failType:null,failStory:-1,failTime:null,cost:totalCost()};
 }
-/* -------------------- PHYSICS -------------------- */
 function structuralDrifts(){
 const s=state;const drifts=[];
 if(s.sys.baseIndex===null){
@@ -1102,150 +268,6 @@ const roofDrift=Math.abs(roof-base)/(s.n*storyHeight);
 s.maxRoofDrift=Math.max(s.maxRoofDrift,roofDrift);
 if(history.length<1000 && Math.floor(s.t*60)!==Math.floor((s.t-dt)*60)){history.push([s.t,roofDrift]);}
 }
-/* -------------------- RUN / SCORE -------------------- */
-function run(){
-state=newState();
-history=[];
-clearStamp();
-running=true;
-lastFrame=performance.now();
-accumulator=0;
-ui.run.disabled=true;
-ui.status.textContent="Shaking";
-ui.status.className="statusRun";
-ui.score.textContent="—";
-ui.storyDrift.textContent="0.00%";
-ui.baseTravel.textContent="0.0 cm";
-ui.why.innerHTML="<div>Shake test in progress…</div>";
-/* Phone: after tapping Run, bring the drawing into view. */
-if(window.innerWidth<860){
-requestAnimationFrame(()=>{
-document.querySelector(".stage").scrollIntoView({
-behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches? "auto": "smooth",
-block:"start"
-});
-});
-}
-requestAnimationFrame(loop);
-}
-function loop(ts){
-if(!running) return;
-const frame=Math.min(0.04,(ts-lastFrame)/1000 || 0);
-lastFrame=ts;
-accumulator+=frame*timeScale;
-const dt=1/600;
-let guard=0;
-while(accumulator>=dt && guard++<60 && state.t<15 && !state.failed){step(dt);accumulator-=dt;}
-ui.storyDrift.textContent=(state.maxStoryDrift*100).toFixed(2)+"%";
-ui.baseTravel.textContent=(state.maxBaseTravel*100).toFixed(1)+" cm";
-draw();
-drawGraph();
-if(state.failed){
-finishRun();
-/* Physics stops at failure; keep repainting to show the collapse */
-if(state.failType==="story"){
-const runState=state;
-const animateCollapse=()=>{
-if(state!==runState) return; /* Reset or a new run took over */
-draw();
-const start=Number.isFinite(runState.visualFailStart)? runState.visualFailStart: 0;
-if(performance.now()-start<1500){requestAnimationFrame(animateCollapse);}
-};
-requestAnimationFrame(animateCollapse);
-}
-return;
-}
-if(state.t>=15){finishRun();return;}
-requestAnimationFrame(loop);
-}
-function finishRun(){
-running=false;
-ui.run.disabled=false;
-const survived=!state.failed;
-if(survived){ui.status.textContent="Survived";ui.status.className="statusGood";}
-else{ui.status.textContent=`Collapsed @ ${state.failTime.toFixed(1)}s`;ui.status.className="statusBad";}
-const overBudget=Math.max(0,state.cost-budgetK);
-let score=survived? 1000: 100;
-if(survived){score+=Math.max(0,500-state.maxStoryDrift*100*90);}
-score-=overBudget*8;
-score=Math.max(0,Math.round(score));
-ui.score.textContent=score;
-updateBestScore(score);
-whyPanel();
-showStamp(survived,survived? 15: state.failTime);
-draw();
-drawGraph();
-}
-function reset(){
-running=false;
-ui.run.disabled=false;
-state=null;
-history=[];
-clearStamp();
-loadBestScore();
-ui.status.textContent="Ready";
-ui.status.className="";
-ui.score.textContent="—";
-ui.storyDrift.textContent="0.00%";
-ui.baseTravel.textContent="0.0 cm";
-ui.why.innerHTML="<div>Run a shake test to get an engineering explanation.</div>";
-draw();
-drawGraph();
-}
-/* -------------------- WHY PANEL -------------------- */
-function whyPanel(){
-const fq=+ui.freq.value;
-const f1=state.f1;
-const lines=[];
-const ratio=fq/f1;
-if(Math.abs(ratio-1)<0.15){
-lines.push(`The quake (${fq.toFixed(2)} Hz) was close to the building's first natural frequency (${f1.toFixed(2)} Hz), so resonance amplified motion.`);
-}
-else{
-lines.push(`The quake frequency (${fq.toFixed(2)} Hz) was ${fq<f1?"below":"above"} the building's first natural frequency (${f1.toFixed(2)} Hz), so direct resonance was weaker.`);
-}
-if(braced.some(Boolean)){
-const unbraced=Array(state.n).fill(false);
-const baseF=primaryNaturalFrequency(unbraced,ui.isolation.checked);
-const beforeGap=Math.abs(fq-baseF);
-const afterGap=Math.abs(fq-f1);
-if(afterGap<beforeGap*0.85){
-lines.push(`Bracing made the building stiffer, but it also moved its natural frequency from ${baseF.toFixed(2)} Hz toward the quake frequency — a useful example of how "stiffer" is not automatically "safer."`);
-}
-else{
-lines.push(`X-bracing increased stiffness and shifted the building's natural frequency from about ${baseF.toFixed(2)} Hz to ${f1.toFixed(2)} Hz.`);
-}
-}
-else{
-lines.push("Without X-bracing, the frame stayed more flexible, which generally increases drift but keeps its natural frequency lower.");
-}
-if(ui.isolation.checked){
-const nearIsolationMode=Math.abs(fq-f1)/f1<0.15;
-if(nearIsolationMode){
-lines.push(`Base isolation usually protects against faster shaking, but this quake was close to the isolated building's long-period mode. That can create very large bearing motion — one reason real isolated buildings need large seismic moats. Peak travel was ${(state.maxBaseTravel*100).toFixed(1)} cm.`);
-}
-else{
-lines.push(`Base isolation added a soft, highly damped moving base, reducing motion transmitted into the structure. Peak bearing travel was ${(state.maxBaseTravel*100).toFixed(1)} cm.`);
-}
-}
-else if(ui.tmd.checked){
-lines.push(`The tuned mass damper was set to ${state.tmd.ft.toFixed(2)} Hz so its motion opposed roof vibration near the first mode.`);
-}
-else{
-lines.push("No isolation or tuned mass damper was active, so the structural frame had to resist and dissipate nearly all of the shaking.");
-}
-if(!state.failed){
-lines.push(`The building survived: maximum interstory drift was ${(state.maxStoryDrift*100).toFixed(2)}%, below the 2.5% failure limit.`);
-}
-else if(state.failType==="isolation"){
-lines.push(`The isolator exceeded 45 cm of travel and hit its simulated moat wall at ${state.failTime.toFixed(1)} seconds.`);
-}
-else{
-lines.push(`Story ${state.failStory+1} exceeded the 2.5% interstory-drift limit at ${state.failTime.toFixed(1)} seconds.`);
-}
-ui.why.innerHTML=lines.slice(0,4).map(x=>`<div>• ${x}</div>`).join("");
-}
-/* -------------------- DRAWING -------------------- */
 function resizeCanvas(c){
 const r=c.getBoundingClientRect();
 const d=Math.min(devicePixelRatio || 1,2);
@@ -1253,423 +275,234 @@ const w=Math.round(r.width*d);
 const h=Math.round(r.height*d);
 if(c.width!==w || c.height!==h){c.width=w;c.height=h;c.getContext("2d").setTransform(d,0,0,d,0,0);}
 }
-function hashSeed(value){
-let h=2166136261;
-const s=String(value);
-for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}
-return h>>>0;
+/* -------------------- BRICK MODEL -------------------- */
+const materials={wood:{k:5.5e6,cost:8,label:"Wood brick",color:"#C99E64"},concrete:{k:9e6,cost:12,label:"Stone brick",color:"#A6A9A5"},steel:{k:12e6,cost:15,label:"Steel brick",color:"#7189A4"}};
+let rows=Array.from({length:6},()=>({type:"steel",brace:false}));
+let braced=rows.map(r=>r.brace); /* kept in sync for the physics helpers' default arguments */
+let selectedTool="steel",rowHitBoxes=[],ghostHitBox=null,tumbleBodies=[],tumbleLast=0,simSpeed=1,demoAfterRun=null,introIndex=-1,introActive=false;
+const brickColors={wood:"#C99E64",concrete:"#A6A9A5",steel:"#7189A4"};
+function storyStiffnesses(customBracing=rows.map(r=>r.brace)){
+const n=rows.length,ks=[];
+for(let i=0;i<n;i++)ks.push(materials[rows[i].type].k*(customBracing[i]?braceMultiplier:1));
+return ks;
 }
-function seededUnit(seed,index){
-let x=(seed+Math.imul(index+1,0x6D2B79F5))>>>0;
-x^=x>>>15;
-x=Math.imul(x,x|1);
-x^=x+Math.imul(x^x>>>7,x|61);
-x^=x>>>14;
-return((x>>>0)/4294967295);
+function totalCost(){
+let c=rows.reduce((s,r)=>s+materials[r.type].cost+(r.brace?braceCost:0),0);
+if(ui.isolation.checked)c+=isolationCost;
+if(ui.tmd.checked)c+=tmdCost;
+return c;
 }
+function syncRowsToPhysics(){
+ui.floors.value=rows.length;ui.floorsV.textContent=rows.length;
+braced=rows.map(r=>r.brace);
+ui.isolation.checked=document.body.dataset.isolation==="1";
+ui.tmd.checked=document.body.dataset.tmd==="1";
+}
+function setDefaultTower(){
+rows=Array.from({length:6},()=>({type:"steel",brace:false}));
+document.body.dataset.isolation="0";document.body.dataset.tmd="0";
+ui.isolation.checked=false;ui.tmd.checked=false;selectedTool="steel";
+ui.preset.value="strong";applyPreset();syncTraySelection();updateDesign(true);
+}
+function syncTraySelection(){
+document.querySelectorAll(".trayItem").forEach(b=>{const on=b.dataset.tool===selectedTool;b.classList.toggle("selected",on);b.setAttribute("aria-pressed",on?"true":"false")});
+}
+function selectTool(tool){selectedTool=tool;syncTraySelection();draw()}
+function setPreset(name){
+ui.preset.value=name;
+document.querySelectorAll("[data-preset-card]").forEach(b=>b.classList.toggle("selected",b.dataset.presetCard===name));
+applyPreset();
+}
+function applyPreset(){
+if(ui.preset.value==="gentle"){ui.pga.value=.18;ui.freq.value=.75}
+else if(ui.preset.value==="strong"){ui.pga.value=.62;ui.freq.value=1.20}
+else{ui.pga.value=.35;ui.freq.value=Math.max(.2,Math.min(3,primaryNaturalFrequency().toFixed(2)))}
+updateDesign(false);
+}
+function updateDesign(designChanged=false){
+syncRowsToPhysics();
+if(designChanged&&ui.preset.value==="resonance")ui.freq.value=Math.max(.2,Math.min(3,primaryNaturalFrequency().toFixed(2)));
+const f1=primaryNaturalFrequency(),cost=totalCost();
+ui.pgaV.textContent=(+ui.pga.value).toFixed(2)+" g";ui.freqV.textContent=(+ui.freq.value).toFixed(2);
+ui.cost.textContent=cost+" coins";ui.natF.textContent=f1.toFixed(2);ui.period.textContent=(1/f1).toFixed(2);ui.quakeF.textContent=(+ui.freq.value).toFixed(2);
+document.getElementById("towerRhythm").textContent=f1.toFixed(2);document.getElementById("quakeRhythm").textContent=(+ui.freq.value).toFixed(2);
+const coinEl=document.getElementById("coinReadout");coinEl.textContent=`${cost} / ${budgetK}`;coinEl.style.color=cost>budgetK?"var(--red)":"";
+updateRhythmMeter(f1,+ui.freq.value);if(!running)draw();
+}
+function updateRhythmMeter(f1,fq){
+const gap=Math.abs(fq-f1)/f1,match=Math.max(0,Math.min(1,1-gap)),danger=gap<.15;
+const fill=document.getElementById("matchFill"),text=document.getElementById("matchText");
+fill.style.width=(match*100).toFixed(0)+"%";fill.style.background=danger?"var(--red)":gap<.35?"var(--yellow)":"var(--green)";
+text.classList.toggle("danger",danger);text.textContent=danger?"Danger: rhythms match!":gap<.35?"The rhythms are getting close.":"Rhythms are safely apart.";
+}
+function updateWobbleMeter(value){
+const pct=value*100,angle=-90+Math.min(1,pct/4)*180;
+document.getElementById("wobbleNeedle").style.transform=`rotate(${angle}deg)`;
+document.getElementById("wobbleValue").textContent=pct.toFixed(2)+"%";
+document.getElementById("wobbleWords").textContent=pct>=2.5?"Too much wobble":pct>=1.5?"Wobbling hard":pct>=.6?"Noticeable sway":"Barely moving";
+}
+function starCount(){
+if(state.failed)return 0;
+if(state.cost<=budgetK&&state.maxStoryDrift<.015)return 3;
+if(state.cost<=budgetK)return 2;
+return 1;
+}
+function showStars(n){document.getElementById("stars").textContent="★".repeat(n)+"☆".repeat(3-n)}
+function handleCanvasTap(e){
+if(running)return;
+const r=sim.getBoundingClientRect(),x=(e.clientX-r.left),y=(e.clientY-r.top);
+const hit=[...rowHitBoxes].reverse().find(b=>x>=b.x&&x<=b.x+b.w&&y>=b.y&&y<=b.y+b.h);
+if(selectedTool==="wood"||selectedTool==="concrete"||selectedTool==="steel"){
+if(hit)rows[hit.i].type=selectedTool;
+else if(rows.length<10&&ghostHitBox&&y<=ghostHitBox.y+ghostHitBox.h+30)rows.push({type:selectedTool,brace:false});
+}else if(selectedTool==="brace"&&hit)rows[hit.i].brace=!rows[hit.i].brace;
+else if(selectedTool==="eraser"&&hit&&rows.length>2)rows.splice(hit.i,1);
+else if(selectedTool==="isolation"){const on=document.body.dataset.isolation!=="1";document.body.dataset.isolation=on?"1":"0";ui.isolation.checked=on}
+else if(selectedTool==="tmd"){const on=document.body.dataset.tmd!=="1";document.body.dataset.tmd=on?"1":"0";ui.tmd.checked=on}
+if(state&&!running){reset();}
+updateDesign(true);
+}
+function handleCanvasKey(e){
+if(e.key!=="Enter"&&e.key!==" ")return;e.preventDefault();
+if((selectedTool==="wood"||selectedTool==="concrete"||selectedTool==="steel")&&rows.length<10){rows.push({type:selectedTool,brace:false});updateDesign(true)}
+else if(selectedTool==="isolation"||selectedTool==="tmd"){handleCanvasTap({clientX:sim.getBoundingClientRect().left+sim.clientWidth/2,clientY:sim.getBoundingClientRect().top+sim.clientHeight/2})}
+}
+function hashSeed(v){let h=2166136261,s=String(v);for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function seededUnit(seed,i){let x=(seed+Math.imul(i+1,0x6D2B79F5))>>>0;x^=x>>>15;x=Math.imul(x,x|1);x^=x+Math.imul(x^x>>>7,x|61);x^=x>>>14;return(x>>>0)/4294967295}
 function sketchLine(c,x1,y1,x2,y2,seed,color="#2F3437",width=1.4,passes=2){
-const h=hashSeed(seed);
-c.save();
-c.strokeStyle=color;
-c.lineCap="round";
-c.lineJoin="round";
-for(let p=0;p<passes;p++){
-const j1=(seededUnit(h,p*4)-.5)*1.25;
-const j2=(seededUnit(h,p*4+1)-.5)*1.25;
-const j3=(seededUnit(h,p*4+2)-.5)*1.25;
-const j4=(seededUnit(h,p*4+3)-.5)*1.25;
-c.globalAlpha=p===0? .78: .34;
-c.lineWidth=width*(p===0? 1: .72);
-c.beginPath();
-c.moveTo(x1+j1,y1+j2);
-c.lineTo(x2+j3,y2+j4);
-c.stroke();
-}
-c.restore();
-}
-function sketchPolyline(c,points,seed,color="#2F3437",width=1.4){
-for(let i=1;i<points.length;i++){
-sketchLine(c,points[i-1][0],points[i-1][1],points[i][0],points[i][1],`${seed}-${i}`,color,width,2);
-}
-}
-function drawPencilSlab(c,x,y,width,angle,seed,failed=false){
-c.save();
-c.translate(x,y);
-c.rotate(angle);
-const edge=failed? "#C8352B": "#2F3437";
-sketchLine(c,-width/2,-4,width/2,-4,`${seed}-top`,edge,2.2);
-sketchLine(c,-width/2,4,width/2,4,`${seed}-bottom`,edge,1.7);
-sketchLine(c,-width/2,-4,-width/2,4,`${seed}-left`,edge,1.3);
-sketchLine(c,width/2,-4,width/2,4,`${seed}-right`,edge,1.3);
-c.strokeStyle=failed? "rgba(200,53,43,.34)": "rgba(47,52,55,.23)";
-c.lineWidth=1;
-for(let hx=-width/2+9;hx<width/2-4;hx+=12){
-c.beginPath();
-c.moveTo(hx,3);
-c.lineTo(hx+8,-3);
-c.stroke();
-}
-c.restore();
+const h=hashSeed(seed);c.save();c.strokeStyle=color;c.lineCap="round";
+for(let p=0;p<passes;p++){const j=(n)=>(seededUnit(h,p*4+n)-.5)*1.2;c.globalAlpha=p? .32:.8;c.lineWidth=width*(p?.72:1);c.beginPath();c.moveTo(x1+j(0),y1+j(1));c.lineTo(x2+j(2),y2+j(3));c.stroke()}c.restore();
 }
 function displayGroundDisplacement(t){
-if(!state || !Number.isFinite(t)){return 0;}
-const f=Math.max(.20,+ui.freq.value);
-const omega=2*Math.PI*f;
-/* Display-only displacement estimate. For a sinusoid a = -omega^2 x. Never fed back into the physics. */
-let x=-groundAcceleration(t)/(omega*omega);
-/* Keep an extreme custom input from moving the drawing off the sheet. */
-x=Math.max(-.32,Math.min(.32,x));
-return x;
+if(!state||!Number.isFinite(t))return 0;const f=Math.max(.2,+ui.freq.value),w=2*Math.PI*f;
+return Math.max(-.32,Math.min(.32,-groundAcceleration(t)/(w*w)));
 }
-function clearStamp(){
-const stamp=document.getElementById("stampOverlay");
-if(!stamp) return;
-stamp.classList.remove("show","fail");
-stamp.setAttribute("aria-hidden","true");
+function drawToyBrick(c,x,y,w,h,color,seed,angle=0,alpha=1){
+c.save();c.translate(x,y);c.rotate(angle);c.globalAlpha=alpha;c.fillStyle=color;c.fillRect(-w/2,-h/2,w,h);
+sketchLine(c,-w/2,-h/2,w/2,-h/2,seed+"t","#2F3437",1.4);sketchLine(c,-w/2,h/2,w/2,h/2,seed+"b","#2F3437",1.2);sketchLine(c,-w/2,-h/2,-w/2,h/2,seed+"l","#2F3437",1.2);sketchLine(c,w/2,-h/2,w/2,h/2,seed+"r","#2F3437",1.2);
+const studs=Math.max(2,Math.round(w/28));for(let i=0;i<studs;i++){const sx=-w/2+(i+.5)*w/studs;c.fillStyle=color;c.beginPath();c.ellipse(sx,-h/2,Math.min(7,w/studs*.28),3.3,0,0,Math.PI*2);c.fill();c.strokeStyle="#2F3437";c.lineWidth=1;c.stroke()}c.restore();
 }
-function showStamp(survived,time){
-const stamp=document.getElementById("stampOverlay");
-if(!stamp) return;
-const word=stamp.querySelector(".stampWord");
-const timeEl=stamp.querySelector(".stampTime");
-word.textContent=survived? "PASSED": "COLLAPSED";
-timeEl.textContent=survived? "15.0 s": `${time.toFixed(1)} s`;
-stamp.classList.remove("show","fail");
-if(!survived){stamp.classList.add("fail");}
-/* Force a reflow so repeated runs replay the stamp. */
-void stamp.offsetWidth;
-stamp.classList.add("show");
-stamp.setAttribute("aria-hidden","false");
+function drawBrace(c,left,right,top,bottom,seed){sketchLine(c,left,bottom,right,top,seed+"a","#2B4C9B",2.2);sketchLine(c,right,bottom,left,top,seed+"b","#2B4C9B",2.2)}
+function initTumbleBodies(){
+tumbleBodies=[];if(!state||state.failType!=="story")return;
+const w=sim.clientWidth,h=sim.clientHeight,tableY=h-76,n=rows.length,dy=(tableY-55)/(n+1),towerW=Math.min(w*.43,300),brickW=towerW/4;
+for(let i=state.failStory;i<n;i++)for(let b=0;b<4;b++)tumbleBodies.push({row:i,type:rows[i].type,x:w*.47-towerW/2+brickW*(b+.5)+(Math.random()-.5)*4,y:tableY-(i+1)*dy,vx:(Math.random()-.5)*150+(i-state.failStory)*20,vy:-30-Math.random()*90,a:(Math.random()-.5)*.08,av:(Math.random()-.5)*4,w:brickW-3,h:19});
+tumbleLast=performance.now();
 }
-function loadBestScore(){
-const el=document.getElementById("bestScore");
-if(!el) return;
-try{
-const saved=localStorage.getItem("quakeLabBestScore");
-el.textContent=saved===null? "—": saved;
-}
-catch(err){el.textContent="—";}
-}
-function updateBestScore(score){
-const el=document.getElementById("bestScore");
-if(!el) return;
-try{
-const oldRaw=localStorage.getItem("quakeLabBestScore");
-const old=oldRaw===null? -Infinity: Number(oldRaw);
-if(!Number.isFinite(old) || score>old){
-localStorage.setItem("quakeLabBestScore",String(score));
-el.textContent=String(score);
-}
-else{el.textContent=String(old);}
-}
-catch(err){
-/* Private browsing / locked-down storage should never break the sim. */
-el.textContent=String(score);
-}
+function updateTumbleBodies(now){
+if(!tumbleBodies.length)return;let dt=Math.min(.035,(now-tumbleLast)/1000||0);tumbleLast=now;const floor=sim.clientHeight-78;
+for(const b of tumbleBodies){b.vy+=540*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;b.a+=b.av*dt;if(b.y+b.h/2>floor){b.y=floor-b.h/2;b.vy*=-.28;b.vx*=.73;b.av*=.68}}
 }
 function draw(){
-resizeCanvas(sim);
-const w=sim.clientWidth;
-const h=sim.clientHeight;
-ctx.clearRect(0,0,w,h);
-const n=state? state.n: +ui.floors.value;
-const tableY=h-82;
-const topY=55;
-const usable=tableY-topY;
-const dy=usable/(n+1);
-const buildingWidth=Math.min(w*.43,285);
-const motionScale=140;
-const groundMotion=state? displayGroundDisplacement(state.t): 0;
-const groundX=groundMotion*motionScale;
-const center=w*.47;
-let baseRelative=0;
-let floorRelative=Array(n).fill(0);
-if(state){
-if(state.sys.baseIndex===null){floorRelative=state.x.map(x=>x*motionScale);}
-else{baseRelative=state.x[0]*motionScale;floorRelative=state.x.slice(1).map(x=>x*motionScale);}
-}
-const baseX=groundX+baseRelative;
-const floors=floorRelative.map(x=>groundX+x);
-/* Moving ground strokes. */
-for(let i=0;i<20;i++){
-const gx=-30+i*((w+60)/19)+groundX;
-sketchLine(ctx,gx,tableY+28,gx+17,tableY+39,`ground-${i}`,"rgba(47,52,55,.42)",1.1,1);
-}
-/* Plywood shake table. */
-const tableLeft=center-buildingWidth*.78+groundX;
-const tableRight=center+buildingWidth*.78+groundX;
-ctx.save();
-ctx.fillStyle="rgba(196,154,98,.48)";
-ctx.beginPath();
-ctx.moveTo(tableLeft,tableY+3);
-ctx.lineTo(tableRight,tableY+3);
-ctx.lineTo(tableRight-4,tableY+22);
-ctx.lineTo(tableLeft+3,tableY+22);
-ctx.closePath();
-ctx.fill();
-ctx.restore();
-sketchLine(ctx,tableLeft,tableY+3,tableRight,tableY+3,"table-top","#2F3437",2.2);
-sketchLine(ctx,tableLeft+3,tableY+22,tableRight-4,tableY+22,"table-bottom","#2F3437",1.7);
-for(let i=0;i<7;i++){
-const x=tableLeft+12+i*((tableRight-tableLeft-24)/6);
-sketchLine(ctx,x,tableY+6,x+12,tableY+19,`woodgrain-${i}`,"rgba(91,68,42,.38)",1,1);
-}
-ctx.save();
-ctx.fillStyle="#5C625F";
-ctx.font='14px "Architects Daughter","Comic Sans MS",cursive';
-ctx.fillText("plywood shake table",tableLeft+8,tableY+51);
-ctx.restore();
-/* Isolation pads. */
-if(ui.isolation.checked){
-for(let j=-2;j<=2;j++){
-const x=center+baseX+j*31;
-ctx.save();
-ctx.fillStyle="rgba(85,91,88,.74)";
-ctx.fillRect(x-9,tableY-3,18,9);
-ctx.restore();
-sketchLine(ctx,x-9,tableY,x+9,tableY,`bearing-${j}`,"#2F3437",1);
-}
-sketchLine(ctx,center-buildingWidth/2+baseX,tableY-9,center+buildingWidth/2+baseX,tableY-9,"base-slab","#2F3437",3);
-}
-/* Building stories. */
+resizeCanvas(sim);const w=sim.clientWidth,h=sim.clientHeight,c=ctx;c.clearRect(0,0,w,h);rowHitBoxes=[];ghostHitBox=null;
+const n=rows.length,tableY=h-76,dy=(tableY-55)/(n+1),towerW=Math.min(w*.43,300),brickW=towerW/4,motionScale=140,groundX=state?displayGroundDisplacement(state.t)*motionScale:0,center=w*.47;
+let baseRel=0,floorRel=Array(n).fill(0);
+if(state){if(state.sys.baseIndex===null)floorRel=state.x.map(v=>v*motionScale);else{baseRel=state.x[0]*motionScale;floorRel=state.x.slice(1).map(v=>v*motionScale)}}
+const baseX=groundX+baseRel,floors=floorRel.map(v=>groundX+v);
+for(let i=0;i<19;i++){let gx=-20+i*(w+40)/18+groundX;sketchLine(c,gx,tableY+27,gx+16,tableY+38,"g"+i,"rgba(47,52,55,.38)",1,1)}
+const tl=center-towerW*.72+groundX,tr=center+towerW*.72+groundX;c.fillStyle="rgba(196,154,98,.52)";c.fillRect(tl,tableY+3,tr-tl,19);sketchLine(c,tl,tableY+3,tr,tableY+3,"table","#2F3437",2.2);
+for(let i=0;i<6;i++)sketchLine(c,tl+12+i*(tr-tl-24)/5,tableY+6,tl+24+i*(tr-tl-24)/5,tableY+19,"wood"+i,"rgba(91,68,42,.38)",1,1);
+if(ui.isolation.checked){for(let j=-2;j<=2;j++){c.fillStyle="#555B58";c.fillRect(center+baseX+j*30-8,tableY-5,16,10)}sketchLine(c,center-towerW/2+baseX,tableY-10,center+towerW/2+baseX,tableY-10,"base","#2F3437",2.5)}
+const failedTumble=state&&state.failed&&state.failType==="story"&&tumbleBodies.length;
 for(let i=0;i<n;i++){
-const floorY=tableY-(i+1)*dy;
-const lowerY=i===0? tableY-9: tableY-i*dy;
-const lowerX=i===0? baseX: floors[i-1];
-let upperX=floors[i];
-let drop=0;
-let tilt=0;
-const failed=state && state.failed && state.failType==="story" && i>=state.failStory;
-if(failed){
-const start=Number.isFinite(state.visualFailStart)? state.visualFailStart: performance.now();
-let q=(performance.now()-start)/1250;
-if(!Number.isFinite(q)){q=0;}
-q=Math.max(0,Math.min(1,q));
-const level=i-state.failStory+1;
-drop=q*q*level*15;
-tilt=q*(.045+level*.025);
-upperX+=q*q*level*18;
+if(failedTumble&&i>=state.failStory)continue;
+const y=tableY-(i+1)*dy,x=floors[i]||0,lower=i?floors[i-1]:baseX,rowLeft=center-towerW/2+x,rowTop=y-10;
+rowHitBoxes.push({i,x:rowLeft-8,y:rowTop-9,w:towerW+16,h:dy});
+sketchLine(c,center-towerW*.46+lower,i?tableY-i*dy:tableY-10,center-towerW*.46+x,y,"cl"+i,"#2F3437",1.6);
+sketchLine(c,center+towerW*.46+lower,i?tableY-i*dy:tableY-10,center+towerW*.46+x,y,"cr"+i,"#2F3437",1.6);
+for(let b=0;b<4;b++)drawToyBrick(c,rowLeft+brickW*(b+.5),y,brickW-3,19,brickColors[rows[i].type],`r${i}b${b}`);
+if(rows[i].brace)drawBrace(c,center-towerW*.43+lower,center+towerW*.43+x,y+5,i?tableY-i*dy-5:tableY-15,"brace"+i);
 }
-const leftBottomX=center-buildingWidth*.42+lowerX;
-const rightBottomX=center+buildingWidth*.42+lowerX;
-const leftTopX=center-buildingWidth*.42+upperX;
-const rightTopX=center+buildingWidth*.42+upperX;
-const topY=floorY+drop;
-sketchLine(ctx,leftBottomX,lowerY,leftTopX,topY,`column-left-${i}`,failed? "#C8352B": "#2F3437",2);
-sketchLine(ctx,rightBottomX,lowerY,rightTopX,topY,`column-right-${i}`,failed? "#C8352B": "#2F3437",2);
-if(braced[i]){
-sketchLine(ctx,leftBottomX,lowerY,rightTopX,topY,`brace-a-${i}`,"#2B4C9B",2);
-sketchLine(ctx,rightBottomX,lowerY,leftTopX,topY,`brace-b-${i}`,"#2B4C9B",2);
+if(tumbleBodies.length){updateTumbleBodies(performance.now());for(const b of tumbleBodies)drawToyBrick(c,b.x,b.y,b.w,b.h,brickColors[b.type],"fall"+b.row,b.a)}
+if(ui.tmd.checked){const ry=tableY-n*dy,rx=center+(floors[n-1]||0),mx=state&&state.tmd?center+groundX+state.tmd.x*motionScale:rx+30;sketchLine(c,rx,ry-11,mx,ry-48,"tmdline","#2F3437",1.7);drawToyBrick(c,mx,ry-54,34,18,"#7189A4","tmd",0);c.fillStyle="#2B4C9B";c.font='13px "Architects Daughter",cursive';c.fillText("swinging weight",mx-47,ry-68)}
+if((selectedTool==="wood"||selectedTool==="concrete"||selectedTool==="steel")&&rows.length<10&&!running){const gy=tableY-(n+1)*dy,gx=center-towerW/2+(floors[n-1]||baseX);ghostHitBox={x:gx,y:gy-16,w:towerW,h:28};c.save();c.globalAlpha=.28;for(let b=0;b<4;b++)drawToyBrick(c,gx+brickW*(b+.5),gy,brickW-3,19,brickColors[selectedTool],"ghost"+b);c.restore()}
+if(state){const ay=tableY+55,ax=center+groundX;sketchLine(c,ax-34,ay,ax+34,ay,"arrow","#2B4C9B",1.6);sketchLine(c,ax+34,ay,ax+25,ay-5,"arr1","#2B4C9B",1.6);sketchLine(c,ax+34,ay,ax+25,ay+5,"arr2","#2B4C9B",1.6)}
+if(running){c.fillStyle="#2B4C9B";c.font='18px "Architects Daughter",cursive';c.fillText(`t = ${state.t.toFixed(1)} s`,14,h-16)}
 }
-drawPencilSlab(ctx,center+upperX,topY,buildingWidth,tilt,`slab-${i}`,failed);
-ctx.save();
-ctx.fillStyle=failed? "#C8352B": "#5C625F";
-ctx.font='12px "Architects Daughter","Comic Sans MS",cursive';
-ctx.fillText(`${i+1}`,center+buildingWidth/2+upperX+8,topY+4);
-ctx.restore();
+function clearStamp(){const s=document.getElementById("stampOverlay");s.classList.remove("show","fail");s.setAttribute("aria-hidden","true")}
+function showStamp(passed,time){const s=document.getElementById("stampOverlay");s.querySelector(".stampWord").textContent=passed?"PASSED":"COLLAPSED";s.querySelector(".stampTime").textContent=passed?"15.0 s":time.toFixed(1)+" s";s.classList.remove("show","fail");if(!passed)s.classList.add("fail");void s.offsetWidth;s.classList.add("show");s.setAttribute("aria-hidden","false")}
+function loadBestScore(){try{const v=localStorage.getItem("quakeLabBestScore");document.getElementById("bestScore").textContent=v===null?"—":v}catch(e){document.getElementById("bestScore").textContent="—"}}
+function updateBestScore(v){try{const old=Number(localStorage.getItem("quakeLabBestScore"));if(!Number.isFinite(old)||v>old){localStorage.setItem("quakeLabBestScore",String(v));document.getElementById("bestScore").textContent=v}else document.getElementById("bestScore").textContent=old}catch(e){document.getElementById("bestScore").textContent=v}}
+function run(speed=1){
+syncRowsToPhysics();state=newState();history=[];tumbleBodies=[];clearStamp();running=true;simSpeed=speed;lastFrame=performance.now();accumulator=0;ui.run.disabled=true;ui.status.textContent="Shaking";ui.score.textContent="—";showStars(0);updateWobbleMeter(0);ui.why.innerHTML="<div>The table is shaking…</div>";
+if(window.innerWidth<860&&!introActive)requestAnimationFrame(()=>document.querySelector(".stage").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"start"}));
+requestAnimationFrame(loop);
 }
-/* Hanging roof TMD. */
-if(state && state.tmd){
-const roofY=tableY-n*dy;
-const roofX=center+floors[n-1];
-const weightX=center+groundX+state.tmd.x*motionScale;
-sketchLine(ctx,roofX,roofY-5,weightX,roofY-43,"tmd-hanger","#2F3437",1.7);
-ctx.save();
-ctx.fillStyle="rgba(47,52,55,.28)";
-ctx.fillRect(weightX-15,roofY-55,30,18);
-ctx.restore();
-drawPencilSlab(ctx,weightX,roofY-46,30,0,"tmd-weight",false);
-ctx.save();
-ctx.fillStyle="#2B4C9B";
-ctx.font='12px "Architects Daughter","Comic Sans MS",cursive';
-ctx.fillText("TMD",weightX-13,roofY-63);
-ctx.restore();
+function loop(ts){
+if(!running)return;const frame=Math.min(.04,(ts-lastFrame)/1000||0)*simSpeed;lastFrame=ts;accumulator+=frame;const dt=1/600;let guard=0;
+while(accumulator>=dt&&guard++<60&&state.t<15&&!state.failed){step(dt);accumulator-=dt}
+updateWobbleMeter(state.maxStoryDrift);draw();
+if(state.failed||state.t>=15){finishRun();if(state.failed&&state.failType==="story"){initTumbleBodies();const runState=state,end=performance.now()+1700;(function tumble(){if(state!==runState)return;draw();if(performance.now()<end)requestAnimationFrame(tumble)})()}return}
+requestAnimationFrame(loop);
 }
-/* Ground motion arrow. */
-if(state){
-const arrowY=tableY+66;
-const arrowX=center+groundX;
-sketchLine(ctx,arrowX-36,arrowY,arrowX+36,arrowY,"motion-arrow","#2B4C9B",1.7);
-sketchLine(ctx,arrowX+36,arrowY,arrowX+27,arrowY-5,"motion-arrow-a","#2B4C9B",1.7);
-sketchLine(ctx,arrowX+36,arrowY,arrowX+27,arrowY+5,"motion-arrow-b","#2B4C9B",1.7);
-ctx.save();
-ctx.fillStyle="#2B4C9B";
-ctx.font='13px "Architects Daughter","Comic Sans MS",cursive';
-ctx.fillText("ground motion",arrowX-38,arrowY-8);
-ctx.restore();
+function finishRun(){
+running=false;simSpeed=1;ui.run.disabled=false;const survived=!state.failed;
+ui.status.textContent=survived?"Survived":`Collapsed @ ${state.failTime.toFixed(1)}s`;ui.status.className=survived?"statusGood":"statusBad";
+const over=Math.max(0,state.cost-budgetK);let score=survived?1000:100;if(survived)score+=Math.max(0,500-state.maxStoryDrift*100*90);score-=over*8;score=Math.max(0,Math.round(score));ui.score.textContent=score;
+showStars(starCount());updateBestScore(score);updateWobbleMeter(state.maxStoryDrift);updateRhythmMeter(state.f1,+ui.freq.value);whyPanel();showStamp(survived,survived?15:state.failTime);draw();
+if(demoAfterRun){const cb=demoAfterRun;demoAfterRun=null;setTimeout(cb,450)}
 }
-if(running){
-ctx.save();
-ctx.fillStyle="#2B4C9B";
-ctx.font='18px "Architects Daughter","Comic Sans MS",cursive';
-ctx.fillText(`t = ${state.t.toFixed(1)} s`,16,h-18);
-ctx.restore();
+function reset(){
+running=false;simSpeed=1;state=null;history=[];tumbleBodies=[];demoAfterRun=null;ui.run.disabled=false;clearStamp();loadBestScore();ui.status.textContent="Ready";ui.status.className="";ui.score.textContent="—";showStars(0);updateWobbleMeter(0);ui.why.innerHTML="<div>Run a shake test and we'll explain what your tower did.</div>";updateDesign(false);draw();
 }
+function whyPanel(){
+const fq=+ui.freq.value,f1=state.f1,gap=Math.abs(fq-f1)/f1,lines=[];
+if(gap<.15)lines.push(`The table shook almost exactly at your tower's own rhythm. It's like pushing a swing at just the right moment: each push made the next sway bigger.`);
+else lines.push(`The table and tower had different rhythms, so each shake did not keep adding perfectly to the tower's sway.`);
+if(rows.some(r=>r.brace)){
+const noBraces=rows.map(()=>false),baseF=primaryNaturalFrequency(noBraces,ui.isolation.checked);
+if(Math.abs(fq-f1)<Math.abs(fq-baseF)*.85)lines.push(`Your X-braces made the tower stiffer, but they also moved its rhythm closer to the quake. More stiffness is not always better.`);
+else lines.push(`The X-braces made those rows harder to bend and changed the tower's rhythm.`);
+}else lines.push(`With no X-braces, the tower stayed more flexible and kept a slower natural rhythm.`);
+if(ui.isolation.checked){
+if(gap<.15)lines.push(`The spring feet usually protect the tower from faster shaking, but this slow shake matched the sliding base itself. The pads needed ${(state.maxBaseTravel*100).toFixed(1)} cm of room.`);
+else lines.push(`The spring feet let the bottom slide while the tower above stayed calmer. The pads moved ${(state.maxBaseTravel*100).toFixed(1)} cm.`);
+}else if(ui.tmd.checked)lines.push(`The swinging weight moved against the tower's sway, stealing energy from the motion before it could grow as much.`);
+else lines.push(`Without spring feet or a swinging weight, the tower frame had to handle all of the shaking by itself.`);
+if(!state.failed)lines.push(`It stayed standing. Its worst wobble was ${(state.maxStoryDrift*100).toFixed(2)}%.`);
+else if(state.failType==="isolation")lines.push(`The spring feet needed more than 45 cm of travel and hit their movement limit at ${state.failTime.toFixed(1)} seconds.`);
+else lines.push(`Row ${state.failStory+1} bent past the safe limit first, so everything above it broke loose.`);
+ui.why.innerHTML=lines.slice(0,4).map(s=>`<div>• ${s}</div>`).join("");
 }
-function drawGraph(){
-resizeCanvas(graph);
-const w=graph.clientWidth;
-const h=graph.clientHeight;
-gctx.clearRect(0,0,w,h);
-/* Keep enough vertical scale to always show the 2.5% reference line. */
-const historyMax=history.length? Math.max(...history.map(p=>p[1])): 0;
-const maxY=Math.max(.03,historyMax*1.12);
-/* Failure reference. */
-const limitY=h-10-(storyDriftLimit/maxY)*(h-20);
-gctx.save();
-gctx.strokeStyle="#C8352B";
-gctx.lineWidth=1.5;
-gctx.setLineDash([7,5]);
-gctx.beginPath();
-gctx.moveTo(0,limitY);
-gctx.lineTo(w,limitY);
-gctx.stroke();
-gctx.restore();
-gctx.save();
-gctx.fillStyle="#C8352B";
-gctx.font='12px "Architects Daughter","Comic Sans MS",cursive';
-gctx.fillText("2.5% limit",7,Math.max(13,limitY-5));
-gctx.restore();
-if(history.length<2){return;}
-const points=history.map(p=>[p[0]/15*w,h-10-(p[1]/maxY)*(h-20)]);
-sketchPolyline(gctx,points,"drift-trace","#2F3437",1.7);
-/* Sparse blue student annotations. */
-gctx.save();
-gctx.fillStyle="#2B4C9B";
-gctx.font='12px "Architects Daughter","Comic Sans MS",cursive';
-const maxLabel=`${(historyMax*100).toFixed(2)}% max roof drift`;
-gctx.fillText(maxLabel,w-gctx.measureText(maxLabel).width-8,14);
-gctx.fillText("15 s",w-28,h-14);
-gctx.restore();
+/* -------------------- GUIDE -------------------- */
+function removeIntroFocus(){document.querySelectorAll(".introFocus").forEach(e=>e.classList.remove("introFocus"))}
+function focusIntro(selector){removeIntroFocus();const e=document.querySelector(selector);if(e){e.classList.add("introFocus");e.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"center"})}}
+function introMessage(title,text,target){
+document.getElementById("introTitle").textContent=title;document.getElementById("introText").textContent=text;focusIntro(target);
 }
-/* -------------------- EVENTS -------------------- */
-document.querySelectorAll(".mat").forEach(button=>{
-button.onclick=()=>{
-material=button.dataset.mat;
-document.querySelectorAll(".mat").forEach(b=>b.classList.toggle("active",b===button));
-updateDesign(true);
-};
-});
-ui.floors.oninput=()=>{buildStoryUI();updateDesign(true);};
-ui.isolation.onchange=()=>{updateDesign(true);};
-ui.tmd.onchange=()=>{updateDesign(true);};
-ui.preset.onchange=applyPreset;
-ui.pga.oninput=()=>{updateDesign(false);};
-ui.freq.oninput=()=>{
-/* Manual frequency adjustment turns Resonance Trap into a custom test */
-if(ui.preset.value==="resonance"){ui.preset.value="strong";}
-updateDesign(false);
-};
-/* -------------------- GUIDED INTRO -------------------- */
-const intro={btn:$("introBtn"),bar:$("introCaption"),text:$("introText"),skip:$("introSkip")};
-let introToken=0;
-let introActive=false;
-const reduceMotion=()=>window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-function introSleep(ms,tok){
-return new Promise((res,rej)=>setTimeout(()=>tok===introToken? res(): rej("stopped"),ms));
+function playIntro(){
+introActive=true;introIndex=0;document.getElementById("introNext").textContent="Next";document.getElementById("introOverlay").classList.add("show");setDefaultTower();reset();introMessage("Build with bricks","Pick a brick, then tap the tower. Tapping an old row swaps that row; tapping the ghost row adds a new one.","#tray");
 }
-function introWaitForRun(tok){
-return new Promise((res,rej)=>{
-const check=()=>{
-if(tok!==introToken) return rej("stopped");
-if(!running) return res();
-setTimeout(check,100);
-};
-check();
-});
+function endIntro(){
+introActive=false;introIndex=-1;removeIntroFocus();document.getElementById("introOverlay").classList.remove("show");setDefaultTower();reset();
 }
-function introFocus(el){
-document.querySelectorAll(".introFocus").forEach(e=>e.classList.remove("introFocus"));
-if(!el) return;
-el.classList.add("introFocus");
-el.scrollIntoView({behavior:reduceMotion()? "auto": "smooth",block:"center"});
+function advanceIntro(){
+if(!introActive)return;
+if(introIndex===0){introIndex=1;introMessage("Every tower has a rhythm","This number tells you how many times your tower naturally wants to sway each second.","#rhythmBox");return}
+if(introIndex===1){
+introIndex=2;introMessage("Now hit its rhythm","The Rhythm trap times each shove with the tower, like pushing a swing at exactly the right moment. Watch what happens.","#canvasWrap");
+setDefaultTower();setPreset("resonance");demoAfterRun=()=>{introIndex=3;introMessage("The sway built up","Matching rhythms kept adding energy until a row failed. Now we'll add the swinging weight.","#wobbleBox")};run(2);return;
 }
-function introSay(t){intro.text.textContent=t;}
-function setDefaultDesign(){
-material="steel";
-document.querySelectorAll(".mat").forEach(b=>b.classList.toggle("active",b.dataset.mat==="steel"));
-ui.floors.value=6;
-braced=[];
-buildStoryUI();
-ui.isolation.checked=false;
-ui.tmd.checked=false;
-ui.preset.value="strong";
-applyPreset();
-reset();
+if(introIndex===3){
+introIndex=4;document.body.dataset.tmd="1";ui.tmd.checked=true;updateDesign(true);introMessage("Add the swinging weight","It moves against the tower's sway. We'll run the same Rhythm trap again at 2× speed.","#canvasWrap");
+demoAfterRun=()=>{introIndex=5;introMessage("That changed the result","The same six-row tower can now survive because the top weight fights the sway instead of letting it grow.","#resultsArea")};run(2);return;
 }
-function stopIntro(){
-introToken++;
-introActive=false;
-timeScale=1;
-introFocus(null);
-intro.bar.hidden=true;
-intro.btn.disabled=false;
+if(introIndex===5){introIndex=6;introMessage("Your turn","Try the Big quake under 120 coins, beat the Rhythm trap without spring feet, or make bracing backfire.",".challengeNote");document.querySelector(".challengeNote").open=true;document.getElementById("introNext").textContent="Start building";return}
+if(introIndex===6)endIntro();
 }
-async function playIntro(){
-const tok=++introToken;
-introActive=true;
-intro.btn.disabled=true;
-intro.bar.hidden=false;
-setDefaultDesign();
-const drawing=sim.parentElement;
-try{
-introSay("This is QuakeLab. You design a building, then put it on a shake table.");
-introFocus(drawing);
-await introSleep(4500,tok);
-introSay("On the worksheet, pick the number of floors, the column material, and which stories get X-bracing.");
-introFocus(document.querySelector(".worksheet .section"));
-await introSleep(5500,tok);
-introSay(`Every building sways at its own natural frequency. This one sways at ${ui.natF.textContent}.`);
-introFocus(ui.natF.closest("tr"));
-await introSleep(5000,tok);
-introSay("The Resonance Trap shakes at exactly that frequency. Watch what happens.");
-ui.preset.value="resonance";
-applyPreset();
-introFocus(drawing);
-await introSleep(3000,tok);
-run();
-await introWaitForRun(tok);
-await introSleep(2500,tok);
-introSay("Collapsed. Shaking in rhythm with the building made every sway bigger than the last.");
-await introSleep(4500,tok);
-introSay("The fix: a tuned mass damper, a heavy weight on the roof that swings against the sway.");
-ui.tmd.checked=true;
-updateDesign(true);
-introFocus(ui.tmd.closest(".check"));
-await introSleep(5000,tok);
-introSay("Same earthquake again, sped up 2×.");
-introFocus(drawing);
-await introSleep(1200,tok);
-timeScale=2;
-run();
-await introWaitForRun(tok);
-timeScale=1;
-await introSleep(1500,tok);
-introSay("Passed! Your score rewards low drift and staying under the $120k budget.");
-introFocus(ui.score.closest("tr"));
-await introSleep(5000,tok);
-introSay("Your turn. Try the club challenges and beat the best score.");
-const note=document.querySelector(".note");
-note.open=true;
-introFocus(note);
-await introSleep(5000,tok);
-stopIntro();
-setDefaultDesign();
-note.open=true;
+function wireBrickUI(){
+document.querySelectorAll(".trayItem").forEach(b=>b.addEventListener("click",()=>selectTool(b.dataset.tool)));
+document.querySelectorAll("[data-preset-card]").forEach(b=>b.addEventListener("click",()=>{if(state&&!running)reset();setPreset(b.dataset.presetCard)}));
+document.getElementById("clearDefault").addEventListener("click",()=>{setDefaultTower();reset()});
+document.getElementById("playIntroBtn").addEventListener("click",playIntro);document.getElementById("introAgain").addEventListener("click",playIntro);
+document.getElementById("introNext").addEventListener("click",advanceIntro);document.getElementById("introSkip").addEventListener("click",endIntro);
+sim.addEventListener("click",handleCanvasTap);sim.addEventListener("keydown",handleCanvasKey);
+ui.pga.addEventListener("input",()=>{ui.preset.value="strong";document.querySelectorAll("[data-preset-card]").forEach(b=>b.classList.remove("selected"));updateDesign(false)});
+ui.freq.addEventListener("input",()=>{ui.preset.value="strong";document.querySelectorAll("[data-preset-card]").forEach(b=>b.classList.remove("selected"));updateDesign(false)});
+ui.run.onclick=()=>run(1);ui.reset.onclick=reset;window.addEventListener("resize",draw);
 }
-catch(err){
-/* Skipped or interrupted: stopIntro() already ran. */
-}
-}
-intro.btn.onclick=playIntro;
-intro.skip.onclick=()=>{stopIntro();setDefaultDesign();};
-ui.run.onclick=()=>{if(introActive){stopIntro();}run();};
-ui.reset.onclick=()=>{if(introActive){stopIntro();}reset();};
-window.addEventListener("resize",()=>{draw();drawGraph();});
 /* -------------------- STARTUP -------------------- */
-buildStoryUI();
-updateDesign(false);
-reset();
+syncRowsToPhysics();syncTraySelection();wireBrickUI();setPreset("strong");loadBestScore();reset();
 })();
 </script>
 </body>
